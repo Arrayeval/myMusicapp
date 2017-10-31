@@ -1,0 +1,35 @@
+1>webpack 的basic.config.js的resolve
+
+ resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {//别名（修改这里就可以简写文件路径）
+      'vue$': 'vue/dist/vue.esm.js',
+      '@': resolve('src'),
+       'src':resolve('src'),
+      'common': resolve('src/common')
+    }
+  },
+
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+因此你可以直接在main.js中引入 import 'common/stylus/index.styl
+common被解析为 ../src/common/stylus/index.styl
+
+./被当作是当前目录下
+
+
+在
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "fastclick": "^1.0.6",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "vue": "^2.5.2",
+    "jsonp":"0.2.1",
+    "vue-router": "^3.0.1"
+  },
+  加入你要安装的东西，然后在命令行直接输入npm install   即可安装
+

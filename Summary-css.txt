@@ -1,0 +1,9 @@
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/user-select
+http://www.css88.com/book/css/properties/user-interface/user-select.htm
+
+1> user-select :用于是否允许用户选择文本
+            ：none ,text(默认) , all , element
+
+
+2> -webkit-tap-highlight-color: 用于设置链接被激活的样式

@@ -1,0 +1,12 @@
+1）首先查看 node版本 node -v （node install -g cnpm）
+
+2）npm install -g  vue-cli
+	执行$ vue 产看vue的版本信息
+ 
+ 3）vue init webpack musicApp
+ 利用webpack 构建项目
+ 
+ 
+  npm install --save babel-polyfill fastclick
+  fastclcik 300ms的延迟
+  babel-polyfill： 转化es6的语法
