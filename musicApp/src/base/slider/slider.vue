@@ -5,7 +5,7 @@
       </slot>
     </div>
     <div class="dots">
-
+      <span class="dot" v-for="(item , index) in dots" :class="{active:currentPageIndex == index}">{{index}}</span>
     </div>
   </div>
 </template>
@@ -19,7 +19,11 @@
   export default {
     name: ' ',
     data () {
-      return {}
+      return {
+        dots:[],//点
+        currentPageIndex:0,
+
+      }
     },
     props: {
       loop: {
@@ -38,15 +42,37 @@
 
     mounted(){
       setTimeout(() => {
+        //定义宽度
         this._setSliderWidth();
+
+        //设置dot
+        this._initDots();
+
+        //自动播放
+        if(this.autoPlay){
+          this._play();
+        }
+
+        //初始化better-scroll
         this._initSlider();
-      }, 20)
+      }, 20);
+
+      //监听窗口的大小“重置better-scroll”
+      window.addEventListener("resize",()=>{
+          if(!this.slider){
+              return 0;
+          }
+          this._setSliderWidth(true);
+          this.slider.refresh();//刷新
+      })
     },
     methods: {
-      _setSliderWidth(){
+
+      _setSliderWidth(isRefresh){
         //子元素集合
         this.children = this.$refs.sliderGroup.children;
-
+       // debugger;
+        console.log(this.children.length);
         let width = 0;
         //父容器的宽度
         let sliderWidth = this.$refs.slider.clientWidth;
@@ -58,23 +84,60 @@
           width += sliderWidth;
         }
         //如果是循环轮播()
-        if (this.loop) {
+        if (this.loop && !isRefresh) {//isRefresh避免重复加sliderWidth
          width += 2 * sliderWidth;
         }
         this.$refs.sliderGroup.style.width = width + 'px';
       },
+      _initDots(){
+          this.dots = new Array(this.children.length);
+      },
       _initSlider(){
+          //初始化BETTER-scroll
         this.slider = new BScroll(this.$refs.slider, {
           scrollX: true,
           scrollY: false,
           momentum: false,
-          snap: true,
-          snapLoop: this.loop ||true,
-          snapThreshold:0.3,
-          snapSpeed:400,
-          click:true
-        })
+          snap: {
+            loop: this.loop,
+            threshold: 0.3,
+            speed: 400
+          },
+//          snap: true,
+//          snapLoop: this.loop,
+//          snapThreshold:0.3,
+//          snapSpeed:400,
+        //  click:true
+        });
+
+        //获得当前页
+        this.slider.on("scrollEnd",()=>{
+            //返回当前的pageX
+            //pageX 和 pageY 表示横轴方向和纵轴方向的页面数。
+            let pageIndex =this.slider.getCurrentPage().pageX;
+            if(this.loop){//如果是循环就需要减去拷贝的一份
+                pageIndex-=1;
+            }
+            this.currentPageIndex =pageIndex;
+
+            if(this.autoPlay){
+                //每次滚动之前都要进行清空
+                clearTimeout(this.timer);
+                this._play();
+            }
+        });
+
       },
+
+      _play(){
+        let pageIndex = this.currentPageIndex +1;
+        if(this.loop){
+            pageIndex+=1;
+        }
+        this.timer = setTimeout(()=>{
+            this.slider.goToPage(pageIndex,0,400);
+        },this.interval);
+      }
     }
   }
 </script>
@@ -85,6 +148,7 @@
 
   .slider
     min-height 1px
+    position relative
     .slider-group
       position relative
       overflow hidden
@@ -117,4 +181,8 @@
         height 8px
         border-radius 50%
         background $color-text-ll
+        &.active
+          width 20px
+          border-radius 5px
+          background-color $color-text-ll
 </style>
