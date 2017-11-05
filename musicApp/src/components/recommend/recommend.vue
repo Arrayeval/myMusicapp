@@ -1,17 +1,17 @@
 <template>
-  <scroll class="recommend" :mydata="songList">
-    <div>
-      <div class="recommend-content">
-        <div class="slider-wrapper" v-if="recommends.length">
-          <!--轮播图组件--->
-          <slider>
-            <div v-for="item in recommends">
-              <a :href="item.linkUrl">
-                <img :src="item.picUrl" alt="">
-              </a>
+  <scroll ref="scroll" class="recommend" :mydata="songList">
+        <div>
+          <div class="recommend-content">
+            <div class="slider-wrapper" v-if="recommends.length">
+              <!--轮播图组件--->
+              <slider>
+                <div v-for="item in recommends">
+                  <a :href="item.linkUrl">
+                    <img   :src="item.picUrl" alt="" @load="loadImage">
+                  </a>
+                </div>
+              </slider>
             </div>
-          </slider>
-        </div>
 
         <div class="recommend-list"  v-if="songList.length">
           <h1 class="list-title">热门歌曲推荐</h1>
@@ -58,6 +58,13 @@
           }
         });
       },
+
+      loadImage(){
+          if(!this.checkloaded){
+            this.$refs.scroll.refresh();
+            this.checkloaded = true;
+          }
+      },
 //      _getDiscList(){
 //          getDiscList().then((res)=>{
 //             if(res.code === ERR_OK){
@@ -84,17 +91,17 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/variable.styl"
   .recommend
-  position fixed
-  width 100%
-  top 60px
-  bottom 0
-  z-index -100
+    position fixed
+    width 100%
+    top 60px
+    bottom 0
+    z-index -100
     .recommend-content
       height 100%
       overflow hidden
       .recommend-list
         .list-title
-          heigth 65px
+          height 65px
           line-height 65px
           text-align center
           font-size $font-size-medium
