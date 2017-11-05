@@ -7,7 +7,7 @@
               <slider>
                 <div v-for="item in recommends">
                   <a :href="item.linkUrl">
-                    <img   :src="item.picUrl" alt="" @load="loadImage">
+                    <img class="needsclick"   :src="item.picUrl" alt="" @load="loadImage">
                   </a>
                 </div>
               </slider>
@@ -18,7 +18,8 @@
           <ul class="song-list">
             <li v-for="item in songList" class="list-item">
               <div class="icon">
-                <img width="60" height="60" :src= "item.picUrl">
+                <!--<img width="60" height="60" :src= "item.picUrl">-->
+                <img width="60" height="60" v-lazy= "item.picUrl">
               </div>
               <div class="text">
                 <h2 class="name"  >{{item.songListAuthor}}</h2>
@@ -28,23 +29,36 @@
           </ul>
         </div>
       </div>
+          <div class="loading-container" v-show="!songList.length">
+            <loading></loading>
+          </div>
     </div>
 
   </scroll>
 </template>
 
 <script type="text/ecmascript-6">
- import Scroll from 'base/scroll/scroll'
-  //轮播图组件
-  import Slider from 'base/slider/slider'
 
-  import {getRecommend, getDiscList} from '../../api/recommend'
+ import Scroll from 'base/scroll/scroll'
+
+ //轮播图组件
+ import Slider from 'base/slider/slider'
+
+ //loading组件
+ import loading from 'base/loading/loading'
+
+ //倒入api
+   import {getRecommend, getDiscList} from '../../api/recommend'
   import {ERR_OK} from '../../api/config'
 
   export default {
     name: ' ',
     created(){
-      this._getRecommend();
+        setTimeout(()=>{
+          this._getRecommend();
+        },1000);
+
+
       //  this._getDiscList();
     },
     methods: {
@@ -82,7 +96,8 @@
     },
     components: {
       Slider,
-      Scroll
+      Scroll,
+      loading
     }
   }
 </script>
@@ -134,4 +149,9 @@
 
 
 
+    .loading-container
+      position absolute
+      width 100%
+      top 50%
+      transform translateY(-50%)
 </style>

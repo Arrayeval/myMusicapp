@@ -12,6 +12,8 @@ import './common/stylus/index.styl'
 
 import fastclick from 'fastclick'
 
+import  VueLazyLoad from 'vue-lazyload'
+
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function() {
     fastclick.attach(document.body);
@@ -19,7 +21,10 @@ if ('addEventListener' in document) {
 }
 // fastclick.attach(document.body);
 
+Vue.use(VueLazyLoad,{
+  loading :require('./common/image/default.png')
 
+});
 
 /* eslint-disable no-new */
 new Vue({
