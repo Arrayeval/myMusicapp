@@ -1,63 +1,130 @@
 <template>
-  <div class="recommend">
-    <div class="recommend-content">
-      <div class="slider-wrapper"  v-if="recommends.length">
-        <!--轮播图组件--->
-        <slider>
-          <div v-for="item in recommends">
-            <a :href="item.linkUrl">
-              <img :src="item.picUrl" alt="">
-            </a>
-          </div>
-        </slider>
-      </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌曲推荐</h1>
-        <ul>
+  <scroll class="recommend" :mydata="songList">
+    <div>
+      <div class="recommend-content">
+        <div class="slider-wrapper" v-if="recommends.length">
+          <!--轮播图组件--->
+          <slider>
+            <div v-for="item in recommends">
+              <a :href="item.linkUrl">
+                <img :src="item.picUrl" alt="">
+              </a>
+            </div>
+          </slider>
+        </div>
 
-        </ul>
+        <div class="recommend-list"  v-if="songList.length">
+          <h1 class="list-title">热门歌曲推荐</h1>
+          <ul class="song-list">
+            <li v-for="item in songList" class="list-item">
+              <div class="icon">
+                <img width="60" height="60" :src= "item.picUrl">
+              </div>
+              <div class="text">
+                <h2 class="name"  >{{item.songListAuthor}}</h2>
+                <p class="desc"  >{{item.songListDesc}}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
-  </div>
+  </scroll>
 </template>
 
 <script type="text/ecmascript-6">
-
+ import Scroll from 'base/scroll/scroll'
   //轮播图组件
   import Slider from 'base/slider/slider'
 
-  import {getRecommend} from '../../api/recommend'
-  import { ERR_OK } from '../../api/config'
+  import {getRecommend, getDiscList} from '../../api/recommend'
+  import {ERR_OK} from '../../api/config'
 
   export default {
     name: ' ',
     created(){
       this._getRecommend();
+      //  this._getDiscList();
     },
-    methods:{
+    methods: {
       _getRecommend(){
-          getRecommend().then((res)=>{
-              if(res.code===ERR_OK){
-                 // console.log(res.data.slider);
-                  this.recommends =  res.data.slider;
-              }
-          });
-      }
+        getRecommend().then((res) => {
+          if (res.code === ERR_OK) {
+            console.log(res.data);
+            this.recommends = res.data.slider;//轮播专栏
+            this.songList = res.data.songList;//热门歌单
+            this.radioList = res.data.radioList;//电台
+          }
+        });
+      },
+//      _getDiscList(){
+//          getDiscList().then((res)=>{
+//             if(res.code === ERR_OK){
+//                 console.log(res.data);
+//             }
+//          });
+//      }
     },
     data () {
       return {
-          recommends:[]
+        recommends: [],
+        radioList: [],
+        songList:[]
       }
     },
-    components:{
-        Slider,
+    components: {
+      Slider,
+      Scroll
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/variable.styl"
+  .recommend
+  position fixed
+  width 100%
+  top 60px
+  bottom 0
+  z-index -100
+    .recommend-content
+      height 100%
+      overflow hidden
+      .recommend-list
+        .list-title
+          heigth 65px
+          line-height 65px
+          text-align center
+          font-size $font-size-medium
+          color $color-theme;
+          margin 10px auto
+        .song-list
+          .list-item
+            display flex
+            box-sizing border-box
+            align-items center
+            padding 0 20px 20px 20px
+            .icon
+              flex 60px 0 0
+              width 60px
+              padding-right 20px
+            .text
+              display flex
+              flex-direction column
+              justify-content center
+              flex 1
+              font-size $font-size-small
+              line-height 20px
+              overflow hidden
+              .name
+                margin-bottom 10px
+                color $color-text
+              .desc
+                color $color-text-d
+
+
 
 
 </style>

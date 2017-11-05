@@ -11,7 +11,13 @@ Vue.config.productionTip = false
 import './common/stylus/index.styl'
 
 import fastclick from 'fastclick'
-fastclick.attach(document.body);
+
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function() {
+    fastclick.attach(document.body);
+  }, false);
+}
+// fastclick.attach(document.body);
 
 
 

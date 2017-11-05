@@ -13,6 +13,9 @@ const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
 const webpackConfig = require('./webpack.dev.conf')
 
+//引入axios
+const axios = require('axios');
+
 // default port where dev server listens for incoming traffic
 const port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -23,6 +26,26 @@ const proxyTable = config.dev.proxyTable
 
 const app = express()
 const compiler = webpack(webpackConfig)
+
+//利用express，发送请求
+const apiRouters = express.Router();
+apiRouters.get('/getDiscList', function (req, res) {
+  var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+
+app.use('/api', apiRouters)
+
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -51,7 +74,7 @@ app.use(hotMiddleware)
 Object.keys(proxyTable).forEach(function (context) {
   let options = proxyTable[context]
   if (typeof options === 'string') {
-    options = { target: options }
+    options = {target: options}
   }
   app.use(proxyMiddleware(options.filter || context, options))
 })

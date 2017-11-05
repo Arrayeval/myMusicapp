@@ -66,13 +66,16 @@
           this.slider.refresh();//刷新
       })
     },
+    destroyed(){
+        //在组件被切换（使用生命周期结束时候，要做一些清楚工作）
+        clearTimeout(this.timer);
+    },
     methods: {
-
       _setSliderWidth(isRefresh){
         //子元素集合
         this.children = this.$refs.sliderGroup.children;
        // debugger;
-        console.log(this.children.length);
+        //console.log(this.children.length);
         let width = 0;
         //父容器的宽度
         let sliderWidth = this.$refs.slider.clientWidth;
@@ -128,7 +131,6 @@
         });
 
       },
-
       _play(){
         let pageIndex = this.currentPageIndex +1;
         if(this.loop){
