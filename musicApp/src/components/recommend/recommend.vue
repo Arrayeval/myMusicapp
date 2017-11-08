@@ -54,18 +54,14 @@
   export default {
     name: ' ',
     created(){
-        setTimeout(()=>{
           this._getRecommend();
-        },1000);
-
-
       //  this._getDiscList();
     },
     methods: {
       _getRecommend(){
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
-            console.log(res.data);
+          //  console.log(res.data);
             this.recommends = res.data.slider;//轮播专栏
             this.songList = res.data.songList;//热门歌单
             this.radioList = res.data.radioList;//电台
