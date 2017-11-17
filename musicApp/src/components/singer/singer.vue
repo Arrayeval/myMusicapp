@@ -1,6 +1,6 @@
 <template>
   <div class="singer">
-  <list-view :data="singers"></list-view>
+  <list-view :data="singers" v-if="singers.length>0"></list-view>
 
   </div>
 </template>

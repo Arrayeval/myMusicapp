@@ -24,7 +24,9 @@
       },
       mydata: {//数据传输
         type: Array,
-        default: null
+        default:function(){
+            return [];
+        }
       }
 
     },
