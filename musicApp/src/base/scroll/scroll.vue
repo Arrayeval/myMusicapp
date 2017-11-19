@@ -24,9 +24,14 @@
       },
       mydata: {//数据传输
         type: Array,
-        default:function(){
-            return [];
+        default: function () {
+          return [];
         }
+      },
+
+      listenScroll: {
+        type: Boolean,
+        default:false
       }
 
     },
@@ -38,36 +43,46 @@
     methods: {
       //初始化better-scroll
       _initScroll(){
-        if(!this.$refs.wrapper){
-            return 0;
+        if (!this.$refs.wrapper) {
+          return 0;
         }
         this.scroll = new BScroll(this.$refs.wrapper, {
           probeType: this.probeType,
-          click:this.click,
+          click: this.click,
         });
+
+        //监听滚动事件（在初始化的时候就需要监听）
+        if (this.listenScroll) {
+          let me = this;
+          this.scroll.on('scroll', (pos) => {
+            me.$emit('scroll', pos);
+          });
+        }
+
+
       },
       enable(){
-          this.scroll  && this.scroll.enable();
+        this.scroll && this.scroll.enable();
       },
       disable(){
-          this.scroll && this.scroll.disable();
+        this.scroll && this.scroll.disable();
       },
       refresh(){
-          this.scroll && this.scroll.refresh();
+        this.scroll && this.scroll.refresh();
       },
       scrollTo(){
-          this.scroll && this.scroll.scrollTo.apply(this.scroll,arguments);
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
       },
       scrollToElement(){//使用apply的作用是，可能会传入参数，要强制改变this的指向
-          this.scroll && this.scroll.scrollToElement.apply(this.scroll,arguments);
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
       },
 
-      watch:{
-       //监听数据的改变，重新渲染DOM
-        mydata(val,oldVal){
-              setTimeout(()=>{
-                  this.refresh()
-              },20)
+      watch: {
+        //监听数据的改变，重新渲染DOM
+        mydata(val, oldVal){
+          setTimeout(() => {
+            this.refresh()
+          }, 20)
         }
       }
     }

@@ -1,5 +1,7 @@
 <template>
-  <scroll class="list-view" :data="data" ref="listview">
+  <scroll class="list-view" :mydata="data" ref="listview" :listenScroll="listenScroll" :probeType="probeType"
+          @scroll="scroll"
+  >
     <ul class="list-item">
       <li v-for="group in data" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
@@ -16,7 +18,9 @@
     <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart"
          @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
-        <li v-for="(item,index) in shortcutList" class="item" :data-index="index" >
+        <li v-for="(item,index) in shortcutList" class="item" :data-index="index"
+        :class="{'current':currentIndex===index}"
+        >
           {{item}}
         </li>
 
@@ -42,33 +46,74 @@
         default: function () {
           return [];
         }
+      },
+      probeType: {
+        type: Number,
+        default: 3
       }
     },
     created(){
       //不再data中创建属性是因为这个数据不需要观测
-      this.touch = {}
+      this.touch = {},
+        this.listenScroll = true
     },
     data () {
-      return {}
+      return {
+        scrollY: -1,
+        currentIndex: 0,
+        listHeight: 0
+      }
     },
     computed: {
       shortcutList(){
+
+        //权宜之计
+        setTimeout(() => {
+          this._calculateHeight();
+        }, 20);
+
         return this.data.map((group) => {
           // console.log(group.title);
           return group.title.substr(0, 1);
-
         })
 
-      }
+      },
     },
 
     components: {
       Scroll
     },
     watch: {
-      data(val, old){
-        //  console.log(Object.prototype.toString.call(val));
+      /* TODO:v-if使得这个监听没用
+        data(val){
+        console.log(Object.prototype.toString.call(val));
         console.log(val);
+        setTimeout(() => {
+          this._calculateHeight();
+        }, 20);
+      },
+      */
+      scrollY(newY){
+        const listHeight = this.listHeight
+
+        //当滚动到顶部，newY>0
+        if(newY >0){
+          this.currentIndex =0;
+          return ;
+        }
+
+        //中间部分滚动
+        for (let i = 0; i < listHeight.length; i++) {
+          let height1 = listHeight[i];
+          let height2 = listHeight[i + 1]
+          if (-newY >= height1 && -newY < height2) {//向下拉pageY<0 ,"为了比较大小就需要使用-负号"
+            this.currentIndex = i;
+         //   console.log( this.currentIndex );
+            return
+          }
+        }
+        //滚动到底部，且-newY 大于最后一个元素的上限
+        this.currentIndex =0;
       }
     },
 
@@ -85,7 +130,7 @@
         this.touch.y1 = firstTouch.pageY;
 
         //记录在开始滑动的时候所触碰的是第几个字母
-        this.touch.anchorIndex =anchorIndex ;
+        this.touch.anchorIndex = anchorIndex;
 
       },
 
@@ -99,7 +144,26 @@
 
         //最终目的地
         let anchorIndex = parseInt(this.touch.anchorIndex) + delta;
-        this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 0)
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 300)
+      },
+
+      //获取滚动距离
+      scroll(pos){
+        this.scrollY = pos.y
+      },
+
+      //生成一个数组存储所有的listGroup的元素的高度，高亮遍历
+      _calculateHeight(){
+        this.listHeight = []
+        const list = this.$refs.listGroup
+        let height = 0
+        this.listHeight.push(height);
+        for (let i = 0; i < list.length; i++) {
+          let item = list[i];
+          height += item.clientHeight;
+          this.listHeight.push(height);
+        }
+       // console.log(this.listHeight);
       }
     }
   }
@@ -137,7 +201,6 @@
             color $color-text-l
             font-size $font-size-medium
 
-
     .list-shortcut
       position absolute
       z-index 30
@@ -155,6 +218,6 @@
         line-height 1
         color $color-text-l
         font-size $font-size-small
-      &.current
-        color $color-theme
+        &.current
+          color $color-theme
 </style>

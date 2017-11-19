@@ -20,8 +20,8 @@
     name: ' ',
     data () {
       return {
-        dots:[],//点
-        currentPageIndex:0,
+        dots: [],//点
+        currentPageIndex: 0,
 
       }
     },
@@ -37,7 +37,8 @@
       interval: {
         type: Number,
         default: 4000
-      }
+      },
+
     },
 
     mounted(){
@@ -49,7 +50,7 @@
         this._initDots();
 
         //自动播放
-        if(this.autoPlay){
+        if (this.autoPlay) {
           this._play();
         }
 
@@ -58,23 +59,23 @@
       }, 20);
 
       //监听窗口的大小“重置better-scroll”
-      window.addEventListener("resize",()=>{
-          if(!this.slider){
-              return 0;
-          }
-          this._setSliderWidth(true);
-          this.slider.refresh();//刷新
+      window.addEventListener("resize", () => {
+        if (!this.slider) {
+          return 0;
+        }
+        this._setSliderWidth(true);
+        this.slider.refresh();//刷新
       })
     },
     destroyed(){
-        //在组件被切换（使用生命周期结束时候，要做一些清楚工作）
-        clearTimeout(this.timer);
+      //在组件被切换（使用生命周期结束时候，要做一些清楚工作）
+      clearTimeout(this.timer);
     },
     methods: {
       _setSliderWidth(isRefresh){
         //子元素集合
         this.children = this.$refs.sliderGroup.children;
-       // debugger;
+        // debugger;
         //console.log(this.children.length);
         let width = 0;
         //父容器的宽度
@@ -88,15 +89,15 @@
         }
         //如果是循环轮播()
         if (this.loop && !isRefresh) {//isRefresh避免重复加sliderWidth
-         width += 2 * sliderWidth;
+          width += 2 * sliderWidth;
         }
         this.$refs.sliderGroup.style.width = width + 'px';
       },
       _initDots(){
-          this.dots = new Array(this.children.length);
+        this.dots = new Array(this.children.length);
       },
       _initSlider(){
-          //初始化BETTER-scroll
+        //初始化BETTER-scroll
         this.slider = new BScroll(this.$refs.slider, {
           scrollX: true,
           scrollY: false,
@@ -110,35 +111,35 @@
 //          snapLoop: this.loop,
 //          snapThreshold:0.3,
 //          snapSpeed:400,
-        //  click:true
+          //  click:true
         });
 
         //获得当前页
-        this.slider.on("scrollEnd",()=>{
-            //返回当前的pageX
-            //pageX 和 pageY 表示横轴方向和纵轴方向的页面数。
-            let pageIndex =this.slider.getCurrentPage().pageX;
-            if(this.loop){//如果是循环就需要减去拷贝的一份
-                pageIndex-=1;
-            }
-            this.currentPageIndex =pageIndex;
+        this.slider.on("scrollEnd", () => {
+          //返回当前的pageX
+          //pageX 和 pageY 表示横轴方向和纵轴方向的页面数。
+          let pageIndex = this.slider.getCurrentPage().pageX;
+          if (this.loop) {//如果是循环就需要减去拷贝的一份
+            pageIndex -= 1;
+          }
+          this.currentPageIndex = pageIndex;
 
-            if(this.autoPlay){
-                //每次滚动之前都要进行清空
-                clearTimeout(this.timer);
-                this._play();
-            }
+          if (this.autoPlay) {
+            //每次滚动之前都要进行清空
+            clearTimeout(this.timer);
+            this._play();
+          }
         });
 
       },
       _play(){
-        let pageIndex = this.currentPageIndex +1;
-        if(this.loop){
-            pageIndex+=1;
+        let pageIndex = this.currentPageIndex + 1;
+        if (this.loop) {
+          pageIndex += 1;
         }
-        this.timer = setTimeout(()=>{
-            this.slider.goToPage(pageIndex,0,400);
-        },this.interval);
+        this.timer = setTimeout(() => {
+          this.slider.goToPage(pageIndex, 0, 400);
+        }, this.interval);
       }
     }
   }
