@@ -37,7 +37,6 @@
             this.singers = this._normalizeSinger(this.singers);
              console.log(this._normalizeSinger(this.singers));
           }
-
         }).catch((err) => {
           console.log(err);
         });

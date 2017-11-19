@@ -55,6 +55,13 @@
       refresh(){
           this.scroll && this.scroll.refresh();
       },
+      scrollTo(){
+          this.scroll && this.scroll.scrollTo.apply(this.scroll,arguments);
+      },
+      scrollToElement(){//使用apply的作用是，可能会传入参数，要强制改变this的指向
+          this.scroll && this.scroll.scrollToElement.apply(this.scroll,arguments);
+      },
+
       watch:{
        //监听数据的改变，重新渲染DOM
         mydata(val,oldVal){
