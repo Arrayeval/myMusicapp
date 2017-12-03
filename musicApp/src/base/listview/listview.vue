@@ -6,7 +6,7 @@
       <li v-for="group in data" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
-          <li v-for="item in group.items" class="list-group-item">
+          <li @click="selectItem(item)" v-for="item in group.items" class="list-group-item">
             <!--<img class="avatar" :src="item.avatar" alt="">-->
             <img class="avatar" v-lazy="item.avatar" alt="">
             <span class="name">{{item.name}}</span>
@@ -19,15 +19,21 @@
          @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
         <li v-for="(item,index) in shortcutList" class="item" :data-index="index"
-        :class="{'current':currentIndex===index}"
+            :class="{'current':currentIndex===index}"
         >
           {{item}}
         </li>
-
       </ul>
     </div>
 
+    <!--top fixed-->
+    <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+      <h1 class="fixed-title">{{fixedTitle}}</h1>
+    </div>
 
+    <div v-show="!data.length" class="loading-container">
+      <loading></loading>
+    </div>
   </scroll>
 
 </template>
@@ -37,7 +43,10 @@
 
   import {getData} from 'common/js/dom'
 
+  import Loading from "base/loading/loading"
+
   const ANCHOR_HEIGHT = 18;//每个字母的高度
+  const TITLE_HEIGHT = 30;
   export default {
     name: ' ',
     props: {
@@ -61,12 +70,12 @@
       return {
         scrollY: -1,
         currentIndex: 0,
-        listHeight: 0
+        listHeight: 0,
+        diff: -1
       }
     },
     computed: {
       shortcutList(){
-
         //权宜之计
         setTimeout(() => {
           this._calculateHeight();
@@ -78,28 +87,35 @@
         })
 
       },
+      fixedTitle(){//fixed tile
+        if (this.scrollY > 0) {
+          return ''
+        }
+        return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+      }
     },
 
     components: {
-      Scroll
+      Scroll,
+      Loading
     },
     watch: {
       /* TODO:v-if使得这个监听没用
-        data(val){
-        console.log(Object.prototype.toString.call(val));
-        console.log(val);
-        setTimeout(() => {
-          this._calculateHeight();
-        }, 20);
-      },
-      */
+       data(val){
+       console.log(Object.prototype.toString.call(val));
+       console.log(val);
+       setTimeout(() => {
+       this._calculateHeight();
+       }, 20);
+       },
+       */
       scrollY(newY){
         const listHeight = this.listHeight
 
         //当滚动到顶部，newY>0
-        if(newY >0){
-          this.currentIndex =0;
-          return ;
+        if (newY > 0) {
+          this.currentIndex = 0;
+          return;
         }
 
         //中间部分滚动
@@ -108,12 +124,23 @@
           let height2 = listHeight[i + 1]
           if (-newY >= height1 && -newY < height2) {//向下拉pageY<0 ,"为了比较大小就需要使用-负号"
             this.currentIndex = i;
-         //   console.log( this.currentIndex );
+            //用于fixedTitle
+            this.diff = height2 + newY;
+            //   console.log( this.currentIndex );
             return
           }
         }
         //滚动到底部，且-newY 大于最后一个元素的上限
-        this.currentIndex =0;
+        this.currentIndex = 0;
+      },
+
+      diff(newVal){
+        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+        if (this.fixedTop == fixedTop) {
+              return
+        }
+        this.fixedTop = fixedTop
+        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
       }
     },
 
@@ -163,7 +190,11 @@
           height += item.clientHeight;
           this.listHeight.push(height);
         }
-       // console.log(this.listHeight);
+        // console.log(this.listHeight);
+      },
+
+      selectItem(item){
+          this.$emit("select",item)
       }
     }
   }
@@ -220,4 +251,16 @@
         font-size $font-size-small
         &.current
           color $color-theme
+    .list-fixed
+      position absolute
+      top -1px
+      left 0
+      width 100%
+    .fixed-title
+      height: 30px;
+      line-height: 30px;
+      padding-left: 20px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      background: #333;
 </style>

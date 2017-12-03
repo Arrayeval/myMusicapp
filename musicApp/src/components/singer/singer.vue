@@ -1,7 +1,8 @@
 <template>
   <div class="singer">
-  <list-view :data="singers" v-if="singers.length>0"></list-view>
+    <list-view  @select="selectSinger" :data="singers" v-if="singers.length>0"></list-view>
 
+    <router-view ></router-view>
   </div>
 </template>
 
@@ -29,13 +30,19 @@
       this._getSingerList();
     },
     methods: {
+      selectSinger(singer){
+          this.$router.push({
+            path:`/singer/${singer.id}`
+          });
+      },
+
       _getSingerList(){
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
             // console.log(res.data.list);
             this.singers = res.data.list;
             this.singers = this._normalizeSinger(this.singers);
-             console.log(this._normalizeSinger(this.singers));
+            console.log(this._normalizeSinger(this.singers));
           }
         }).catch((err) => {
           console.log(err);
@@ -97,7 +104,7 @@
         return hot.concat(ret);
       },
     },
-    components:{
+    components: {
       ListView
     }
   }
