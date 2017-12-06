@@ -36,7 +36,7 @@
           this.$router.push({
             path:`/singer/${singer.id}`
           });
-          //vuex
+          //vux(点击歌手，set state[状态])，所以如果我么直接在歌手详情页刷新是获取不到数据this.singer
           this.setSinger(singer)
       },
 
