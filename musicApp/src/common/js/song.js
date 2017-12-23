@@ -21,7 +21,7 @@ export  function createSong(musicData){
     mid:musicData.mid,
     singer:filterSinger(musicData.singer),
     name: musicData.songname,
-    album:musicData.album,
+    album:musicData.albumname,
     duration:musicData.interval,
     //图片的地址：你可以进歌曲详情页进行查看，地址时进行拼接的
     image:`https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
