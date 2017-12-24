@@ -1,7 +1,8 @@
 /**
  * Created by Administrator on 2017/12/4 0004.
  */
-import playMde from "common/js/config"
+import playMode from "common/js/config"
+
 
 const state={
   singer:{},
@@ -10,7 +11,7 @@ const state={
   fullScreen:false,//是否全屏
   playList:[],//播放列表
   sequenceList:[],//顺序播放表
-  mode:playMde.sequence,
+  mode:playMode.sequence,
   currentIndex:-1//当前播放
 };
 

@@ -1,7 +1,7 @@
 <template>
   <div class="song-list">
     <ul>
-      <li v-for="song in song" class="item">
+      <li v-for="(song,index) in song" class="item" @click="selectItem(song,index)">
         <div class="content">
           <h2 class="name" v-text="song.name"></h2>
           <p class="desc">{{getDesc(song)}}</p>
@@ -25,10 +25,13 @@
     data () {
       return {}
     },
-    methods:{
-        getDesc(song){
-            return `${song.singer}-${song.album}`
-        }
+    methods: {
+      getDesc(song){
+        return `${song.singer}-${song.album}`
+      },
+      selectItem(item,index){
+        this.$emit('select',item,index)
+      },
     }
   }
 </script>
@@ -46,7 +49,7 @@
       height 64px
       font-size $font-size-medium
       .rank
-        flex 0 0  25px
+        flex 0 0 25px
         width 25px
         margin-right 30px
         text-align center
@@ -66,7 +69,7 @@
           font-size $font-size-large
       .content
         flex 1
-        line-height  20px
+        line-height 20px
         overflow hidden
 
         .name

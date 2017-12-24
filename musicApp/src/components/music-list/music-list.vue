@@ -20,7 +20,7 @@
     <scroll @scroll="scroll" :probe-type="probeType"
             :listen-scroll="listenScroll" :data="song" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :song="song"></song-list>
+        <song-list :song="song"   @select="selectItem"></song-list>
       </div>
 
 
@@ -40,6 +40,8 @@
   import {prefixStyle} from 'common/js/dom'
 
   import Loading from 'base/loading/loading'
+
+  import {mapActions} from "vuex"
 
   const transform = prefixStyle('transform');
   const backdrop = prefixStyle('backdrop-filter');
@@ -88,7 +90,20 @@
       },
       back(){
         this.$router.back()
-      }
+      },
+
+      /*
+      * 响应song-list的派发事件
+      * */
+      selectItem(item,index){//item：当前点击的歌曲,index:歌曲索引
+        this.selectPlay({
+          list:this.song,//歌曲列表数据
+          index:index
+        })
+      },
+      ...mapActions([
+          'selectPlay'
+      ])
     },
     watch: {
       scrollY(newY){
