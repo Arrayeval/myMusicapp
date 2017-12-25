@@ -17,4 +17,5 @@ export const  selectPlay =function({commit,state},{list,index}){
   //播放状态
   commit(types.SET_PLAYING_STATE,true);
 
+  commit(types.SET_CURRENT_INDEX,index);
 };
