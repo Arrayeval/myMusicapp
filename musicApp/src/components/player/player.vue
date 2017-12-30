@@ -21,7 +21,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img src="" alt="" class="image" :src="currentSong.image">
               </div>
             </div>
@@ -36,7 +36,7 @@
               <i class="icon-prev"></i>
             </div>
             <div class="icon i-center">
-              <i class="icon-play"></i>
+              <i :class="playIcon" @click="toggle_playing"></i>
             </div>
             <div class="icon i-right">
               <i class="icon-next"></i>
@@ -50,22 +50,26 @@
       </div>
     </transition>
 
-    <transition name="mini"></transition>
+    <transition name="mini">
+      <!--缩放后的播放器-->
+      <div class="mini-player" v-show="!fullScreen" @click="open">
+        <div class="icon">
+          <img   alt="" width="40" height="40" :src="currentSong.image" :class="cdCls">
+        </div>
+        <div class="text">
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc" v-html="currentSong.singer"></p>
+        </div>
+        <div class="control">
+          <i :class="miniIcon" @click.stop.prevent="toggle_playing"></i>
+        </div>
+        <div class="control">
+          <i class="icon-playlist"></i>
+        </div>
+      </div>
+    </transition>
 
-    <!--缩放后的播放器-->
-    <div class="mini-player" v-show="!fullScreen" @click="open">
-      <div class="icon">
-        <img src="" alt="" width="40" height="40" :src="currentSong.image">
-      </div>
-      <div class="text">
-        <h2 class="name" v-html="currentSong.name"></h2>
-        <p class="desc" v-html="currentSong.singer"></p>
-      </div>
-      <div class="control"></div>
-      <div class="control">
-        <i class="icon-playlist"></i>
-      </div>
-    </div>
+    <audio ref="audio" :src="currentSong.url"></audio>
   </div>
 </template>
 
@@ -76,7 +80,7 @@
 
   import {prefixStyle} from 'common/js/dom'
 
-  const transform= prefixStyle('transform');
+  const transform = prefixStyle('transform');
 
   export default {
     name: ' ',
@@ -85,10 +89,22 @@
     },
 
     computed: {
+      //用于图标的切换
+      playIcon(){
+        return this.playing ? "icon-pause" : "icon-play"
+      },
+      miniIcon(){
+        return this.playing ? "icon-pause-mini" : "icon-play-mini"
+      },
+      cdCls(){
+        return this.playing?"play":"play pause"
+      },
+
       ...mapGetters([
         'fullScreen',
         'playList',
-        'currentSong'
+        'currentSong',
+        'playing'
       ])
     },
     methods: {
@@ -99,7 +115,8 @@
         this.setFullScreen(true)
       },
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN'
+        setFullScreen: 'SET_FULL_SCREEN',
+        setPlayingState: 'SET_PLAYING_STATE'
       }),
 
       /*创建动画*/
@@ -135,12 +152,12 @@
       leave(el, done){
         this.$refs.cdWrapper.style.transition = 'all 0.4s'
         const {x, y, scale} = this._getPosAndScale();
-        this.$refs.cdWrapper.style[transform]=`translate3d(${x}px,${y}px,0) scale(${scale})`
-        this.$refs.cdWrapper.addEventListener('transitionend',done)
+        this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+        this.$refs.cdWrapper.addEventListener('transitionend', done)
       },
       leaveEnter(){
-          this.$refs.cdWrapper.style.transition='';
-        this.$refs.cdWrapper.style[transform]=''
+        this.$refs.cdWrapper.style.transition = '';
+        this.$refs.cdWrapper.style[transform] = ''
       },
 
       /*获取图片的位置信息*/
@@ -158,6 +175,29 @@
           y,
           scale,
         }
+
+      },
+
+
+      //暂停（播放）
+      toggle_playing(){
+        this.setPlayingState(!this.playing)
+      }
+
+    },
+
+    watch: {
+      currentSong(){
+        this.$nextTick(() => {
+          this.$refs.audio.play();
+        })
+      },
+      //监听状态（播放，暂停）
+      playing(newPlaying){
+        this.$nextTick(() => {
+          const audio = this.$refs.audio
+          newPlaying ? audio.play() : audio.pause()
+        })
 
       }
     }
