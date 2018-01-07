@@ -2,7 +2,11 @@
   <div class="progress-bar" ref="progressBar">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div><!--进度--->
-      <div class="progress-btn-wrapper" ref="progressBtn"> <!--按钮--->
+      <div class="progress-btn-wrapper" ref="progressBtn"
+           @touchstart.prevent="progressTouchStart"
+           @touchmove.prevent="progressTouchMove"
+           @touchend.prevent="progressTouchEnd"
+      > <!--按钮--->
         <div class="progress-btn"></div>
       </div>
     </div>
@@ -12,9 +16,9 @@
 <script type="text/ecmascript-6">
   import {prefixStyle} from "common/js/dom"
 
-  const progressBtnWidth =16
+  const progressBtnWidth = 16
 
-  const transform =prefixStyle("transform")
+  const transform = prefixStyle("transform")
 
   export default {
     name: ' ',
@@ -24,21 +28,66 @@
         default: 0
       }
     },
-    watch:{
+    watch: {
       percent(newPercent){
-        if (newPercent >= 0) {
-          const barWidth = this.$refs.progressBar.clientWidth  -progressBtnWidth
-          const offsetWidth =newPercent*barWidth
-          //进度线
-          this.$refs.progress.style.width =`${offsetWidth}px`
-          //设置小球的偏移
-          this.$refs.progressBtn.style[transform]=`translate3d(${offsetWidth}px,0,0)`
-
+        if (newPercent >= 0 && !this.initiated) {//&& this.initiated表示没有拖动
+          const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+          const offsetWidth = newPercent * barWidth
+          /*
+           //进度线
+           this.$refs.progress.style.width = `${offsetWidth}px`
+           //设置小球的偏移
+           this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+           */
+          this._offset(offsetWidth);
         }
       }
     },
     data(){
       return {}
+    },
+    created(){
+      this.touch = {};
+
+    },
+    methods: {
+      _offset(offsetWidth){
+        //进度线
+        this.$refs.progress.style.width = `${offsetWidth}px`
+        //设置小球的偏移
+        this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      },
+
+      progressTouchStart(e){
+
+        this.touch.initiated = true;
+        this.touch.startX = e.touches[0].pageX;//初始位置
+        this.touch.left = this.$refs.progress.clientWidth;//当前进度
+
+      },
+      progressTouchMove(e){
+        if (!this.touch.initiated) {
+          return
+        }
+        const deltaX = e.touches[0].pageX - this.touch.startX;//获得最新偏移
+
+        const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth,
+          Math.max(0, this.touch.left + deltaX));
+
+        this._offset(offsetWidth);
+      },
+      progressTouchEnd(e){
+        this.touch.initiated = false;
+        //派发事件
+        this._traggerPercent()
+
+      },
+      _traggerPercent(){
+        const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+        const percent = this.$refs.progress.clientWidth / barWidth;
+        //派发事件（告诉外界状态已经改变）
+        this.$emit("percentChange",percent)
+      }
     }
   }
 </script>
