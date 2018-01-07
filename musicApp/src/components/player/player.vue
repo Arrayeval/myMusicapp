@@ -28,18 +28,23 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper"></div>
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
-              <i class="icon-prev"></i>
+            <div class="icon i-left" :class="disabledCls">
+              <i @click="prev" class="icon-prev"></i>
             </div>
-            <div class="icon i-center">
+            <div class="icon i-center" :class="disabledCls">
               <i :class="playIcon" @click="toggle_playing"></i>
             </div>
-            <div class="icon i-right">
-              <i class="icon-next"></i>
+            <div class="icon i-right" :class="disabledCls">
+              <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
@@ -54,7 +59,7 @@
       <!--缩放后的播放器-->
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
-          <img   alt="" width="40" height="40" :src="currentSong.image" :class="cdCls">
+          <img alt="" width="40" height="40" :src="currentSong.image" :class="cdCls">
         </div>
         <div class="text">
           <h2 class="name" v-html="currentSong.name"></h2>
@@ -68,8 +73,14 @@
         </div>
       </div>
     </transition>
+    <transition name="errMsg">
+      <div class="err-msg" v-show="showErrorMessage">
+        网络错误，版权信息
+      </div>
+    </transition>
 
-    <audio ref="audio" :src="currentSong.url"></audio>
+
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 </template>
 
@@ -85,7 +96,11 @@
   export default {
     name: ' ',
     data () {
-      return {}
+      return {
+        songReady: false,//歌曲状态
+        showErrorMessage: false,
+        currentTime: 0
+      }
     },
 
     computed: {
@@ -97,26 +112,35 @@
         return this.playing ? "icon-pause-mini" : "icon-play-mini"
       },
       cdCls(){
-        return this.playing?"play":"play pause"
+        return this.playing ? "play" : "play pause"
       },
 
       ...mapGetters([
         'fullScreen',
         'playList',
         'currentSong',
-        'playing'
-      ])
+        'playing',
+        'currentIndex'
+      ]),
+
+      disabledCls(){
+        return this.songReady ? '' : 'disabled'
+      }
+
     },
     methods: {
       back(){
         this.setFullScreen(false)
+        this.showErrorMessage = false
       },
       open(){
         this.setFullScreen(true)
+        this.showErrorMessage = false
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
-        setPlayingState: 'SET_PLAYING_STATE'
+        setPlayingState: 'SET_PLAYING_STATE',
+        setCurrentIndex: 'SET_CURRENT_INDEX'
       }),
 
       /*创建动画*/
@@ -180,8 +204,72 @@
 
 
       //暂停（播放）
-      toggle_playing(){
+      toggle_playing(tag){
+        if (tag === false) {
+          this.setPlayingState(tag);
+          return
+        }
         this.setPlayingState(!this.playing)
+      },
+
+      //下一首
+      next(){
+        if (!this.songReady) {//歌曲资源未加载完毕禁止点击
+          return
+        }
+        let index = this.currentIndex + 1
+        if (index === this.playList.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)//改变索引值
+        if (!this.playing) {
+          this.toggle_playing()
+        }
+        this.songReady = true;
+      },
+      //前一首
+      prev(){
+        if (!this.songReady) {//歌曲资源未加载完毕禁止点击
+          return
+        }
+        let index = this.currentIndex - 1
+        if (index === -1) {
+          index = this.playList.length - 1
+        }
+        this.setCurrentIndex(index)//改变状态 if(!this.playing)
+        if (!this.playing) {
+          this.toggle_playing()
+        }
+        this.songReady = true;
+
+      },
+
+      ready(){
+        this.songReady = true;
+        this.showErrorMessage = false
+      },
+      error(){//当歌曲加载失败
+        this.songReady = true;//可以点击，
+        this.toggle_playing(false);//设置歌曲不播放
+        //显示错误提示，“歌曲无法获取，网络或者版权问题”
+        this.showErrorMessage = true;
+      },
+      format(interval){
+        interval = interval | 0;
+        const minute = interval / 60 | 0
+        const second =this._pad(interval%60)
+        return `${minute}:${second}`
+      },
+      _pad(num,n=2){
+          let len= num.toString().length;
+          while(len<2){
+              num="0"+num;
+              len++
+          }
+          return num;
+      },
+      updateTime(e){
+        this.currentTime = e.target.currentTime
       }
 
     },
@@ -443,6 +531,25 @@
           position: absolute
           left: 0
           top: 0
+
+    .err-msg
+      width: 200px
+      height: 150px
+      line-height 150px
+      position fixed
+      top 50%
+      left 50%
+      margin-left -100px
+      margin-top -75px
+      background rgba(158, 158, 154, 0.6)
+      border-radius 20px
+      z-index 300
+      text-align center
+      color #d9d9c8
+      &.errMsg-enter-active, &.errMsg-leave-active
+        transition: all 0.4s
+      &.errMsg-enter, &.errMsg-leave-to
+        opacity: 0
 
   @keyframes rotate
     0%
