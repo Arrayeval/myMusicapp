@@ -30,7 +30,11 @@
         <div class="bottom">
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
-            <div class="progress-bar-wrapper"></div>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent">
+
+              </progress-bar>
+            </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
@@ -91,6 +95,8 @@
 
   import {prefixStyle} from 'common/js/dom'
 
+  import ProgressBar from "base/progress-bar/progress-bar"
+
   const transform = prefixStyle('transform');
 
   export default {
@@ -125,6 +131,9 @@
 
       disabledCls(){
         return this.songReady ? '' : 'disabled'
+      },
+      percent(){
+          return this.currentTime/this.currentSong.duration
       }
 
     },
@@ -288,6 +297,10 @@
         })
 
       }
+    },
+
+    components:{
+      ProgressBar
     }
 
   }
