@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-bar" ref="progressBar">
+  <div class="progress-bar" ref="progressBar" @click="progressClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div><!--进度--->
       <div class="progress-btn-wrapper" ref="progressBtn"
@@ -59,8 +59,8 @@
       },
 
       progressTouchStart(e){
-
         this.touch.initiated = true;
+        console.log(e)
         this.touch.startX = e.touches[0].pageX;//初始位置
         this.touch.left = this.$refs.progress.clientWidth;//当前进度
 
@@ -79,14 +79,21 @@
       progressTouchEnd(e){
         this.touch.initiated = false;
         //派发事件
-        this._traggerPercent()
+        this._triggerPercent()
 
       },
-      _traggerPercent(){
+      _triggerPercent(){
+          //整个进度条的总长度
         const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+          //利用实际进度除以进度条的总长
         const percent = this.$refs.progress.clientWidth / barWidth;
         //派发事件（告诉外界状态已经改变）
         this.$emit("percentChange",percent)
+      },
+      //进度播放
+      progressClick(e){
+          this._offset(e.offsetX);
+          this._triggerPercent();
       }
     }
   }
