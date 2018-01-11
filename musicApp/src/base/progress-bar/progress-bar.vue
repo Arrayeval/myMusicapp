@@ -84,16 +84,21 @@
       },
       _triggerPercent(){
           //整个进度条的总长度
-        const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+        const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth;
           //利用实际进度除以进度条的总长
         const percent = this.$refs.progress.clientWidth / barWidth;
         //派发事件（告诉外界状态已经改变）
         this.$emit("percentChange",percent)
       },
-      //进度播放
+      //进度播放()
       progressClick(e){
-          this._offset(e.offsetX);
-          this._triggerPercent();
+         // this._offset(e.offsetX);
+        //  this._triggerPercent();
+        //这里点击progressBtn的时候，e.offsetX获取不对
+        const rect = this.$refs.progressBar.getBoundingClientRect();//获得元素距离屏幕的左边距离
+        const offsetWidth = e.pageX -rect.left;
+        this._offset(offsetWidth);
+        this._triggerPercent();
       }
     }
   }

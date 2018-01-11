@@ -57,6 +57,7 @@
           }
         })
       },
+
       _normalizeSongs(list){
         let ret = []
         list.forEach((item) => {

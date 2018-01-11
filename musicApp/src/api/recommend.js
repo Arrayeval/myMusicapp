@@ -12,7 +12,7 @@ export function getRecommend(){
 }
 
 export function getDiscList() {
-  const url = '/api/getDiscList'
+  const url = '/api/getDiscList';
 
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
@@ -24,7 +24,7 @@ export function getDiscList() {
     categoryId: 10000000,
     rnd: Math.random(),
     format: 'json'
-  })
+  });
 
   return axios.get(url, {
     params: data

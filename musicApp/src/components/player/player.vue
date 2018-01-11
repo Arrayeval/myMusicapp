@@ -87,7 +87,7 @@
     </transition>
 
 
-    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -254,13 +254,32 @@
         this.setPlayingState(!this.playing)
       },
 
+      //歌曲播放完了
+      end(){
+          if(this.mode ===playMode.loop){
+              this.loop();
+          }
+          else{
+            this.next();
+          }
+      },
+
+      //loop循环播放
+      loop(){
+          this.$refs.audio.currentTime = 0;
+          this.$refs.audio.play();
+      },
+
       //下一首
       next(){
+          debugger
+        console.log(this.playList);
         if (!this.songReady) {//歌曲资源未加载完毕禁止点击
           return
         }
-        let index = this.currentIndex + 1
+        let index = this.currentIndex + 1;
         if (index === this.playList.length) {
+
           index = 0
         }
         this.setCurrentIndex(index)//改变索引值
@@ -285,7 +304,7 @@
         this.songReady = true;
 
       },
-
+      //表明资源加载完毕
       ready(){
         this.songReady = true;
         this.showErrorMessage = false
@@ -325,6 +344,7 @@
         }
         return num;
       },
+      //设置播放时间
       updateTime(e){
         this.currentTime = e.target.currentTime
       }
@@ -343,13 +363,12 @@
       //监听状态（播放，暂停）
       playing(newPlaying){
         this.$nextTick(() => {
-          const audio = this.$refs.audio
-          newPlaying ? audio.play() : audio.pause()
-        })
+          const audio = this.$refs.audio;
+          newPlaying ? audio.play() : audio.pause();
+        });
 
       }
     },
-
     components: {
       ProgressBar,
       ProgressCircle
