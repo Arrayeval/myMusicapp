@@ -52,7 +52,7 @@
   import {ERR_OK} from '../../api/config'
 
   export default {
-    name: ' ',
+    //name: ' ',
     created(){
           this._getRecommend();
       //  this._getDiscList();

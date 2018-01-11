@@ -21,7 +21,7 @@
   const transform = prefixStyle("transform")
 
   export default {
-    name: ' ',
+  //  name: ' ',
     props: {
       percent: {
         type: Number,

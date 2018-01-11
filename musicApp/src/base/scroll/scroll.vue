@@ -9,7 +9,7 @@
 <script type="text/ecmascript-6">
   import BScroll from "better-scroll"
   export default {
-    name: ' ',
+  //  name: ' ',
     data () {
       return {}
     },

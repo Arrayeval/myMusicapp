@@ -31,15 +31,15 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar :percent="percent"   @percentChange="onProgressBarChange">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange">
 
               </progress-bar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disabledCls">
               <i @click="prev" class="icon-prev"></i>
@@ -71,7 +71,7 @@
         </div>
         <div class="control">
           <progress-circle :radius="32" :percent="percent">
-            <i :class="miniIcon"  class="icon-mini" @click.stop.prevent="toggle_playing"></i>
+            <i :class="miniIcon" class="icon-mini" @click.stop.prevent="toggle_playing"></i>
           </progress-circle>
         </div>
 
@@ -101,15 +101,21 @@
   import ProgressBar from "base/progress-bar/progress-bar"
 
   import ProgressCircle from "base/progress-circle/progress-circle"
+
+  import playMode from "common/js/config"
+
+  import {shuffle} from "common/js/util"
+
   const transform = prefixStyle('transform');
 
   export default {
-    name: ' ',
+//    name: '',
     data () {
       return {
         songReady: false,//歌曲状态
         showErrorMessage: false,
-        currentTime: 0
+        currentTime: 0,
+
       }
     },
 
@@ -117,6 +123,10 @@
       //用于图标的切换
       playIcon(){
         return this.playing ? "icon-pause" : "icon-play"
+      },
+      iconMode(){
+        console.log(playMode)
+        return this.mode === playMode.sequence ? "icon-sequence" : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
       },
       miniIcon(){
         return this.playing ? "icon-pause-mini" : "icon-play-mini"
@@ -130,14 +140,16 @@
         'playList',
         'currentSong',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        'sequenceList'
       ]),
 
       disabledCls(){
         return this.songReady ? '' : 'disabled'
       },
       percent(){
-          return this.currentTime/this.currentSong.duration
+        return this.currentTime / this.currentSong.duration
       }
 
     },
@@ -153,7 +165,9 @@
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayingState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX'
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setPlayMode: 'SET_PLAY_MODE',
+        setPlayList: 'SET_PLAYLIST'
       }),
 
       /*创建动画*/
@@ -215,6 +229,21 @@
 
       },
 
+      //播放状态
+      changeMode(){
+        const mode = (this.mode + 1) % 3;
+        this.setPlayMode(mode);
+        //更该变播放列表
+        let list = null;
+        if (mode === playMode.random) {
+          list = shuffle(this.sequenceList)
+        }
+        else {
+          list = this.sequenceList;
+        }
+        this.resetCurrentIndex(list);
+        this.setPlayList(list);
+      },
 
       //暂停（播放）
       toggle_playing(tag){
@@ -270,23 +299,31 @@
       format(interval){
         interval = interval | 0;
         const minute = interval / 60 | 0
-        const second =this._pad(interval%60)
+        const second = this._pad(interval % 60)
         return `${minute}:${second}`
       },
 
       onProgressBarChange(percent){
         this.$refs.audio.currentTime = this.currentSong.duration * percent
-        if(!this.playing){//播放
-            this.toggle_playing()
+        if (!this.playing) {//播放
+          this.toggle_playing()
         }
       },
-      _pad(num,n=2){
-          let len= num.toString().length;
-          while(len<2){
-              num="0"+num;
-              len++
-          }
-          return num;
+      //找到当前的歌曲索引
+      resetCurrentIndex(list, song){
+        let index = list.findIndex((item) => {
+          return item.id === this.currentSong.id;
+        });
+        this.setCurrentIndex(index);
+      },
+
+      _pad(num, n = 2){
+        let len = num.toString().length;
+        while (len < 2) {
+          num = "0" + num;
+          len++
+        }
+        return num;
       },
       updateTime(e){
         this.currentTime = e.target.currentTime
@@ -295,7 +332,10 @@
     },
 
     watch: {
-      currentSong(){
+      currentSong(newSong, oldSong){
+        if (newSong.id === oldSong.id) {
+          return
+        }
         this.$nextTick(() => {
           this.$refs.audio.play();
         })
@@ -310,7 +350,7 @@
       }
     },
 
-    components:{
+    components: {
       ProgressBar,
       ProgressCircle
     }

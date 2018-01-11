@@ -16,7 +16,7 @@
 
 
   export default {
-    name: ' ',
+   // name: ' ',
     data () {
       return {
 

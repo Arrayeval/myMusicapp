@@ -47,7 +47,7 @@
   const backdrop = prefixStyle('backdrop-filter');
 
   export default {
-    name: ' ',
+    //name: ' ',
     props: {
       bgImage: {
         type: String,

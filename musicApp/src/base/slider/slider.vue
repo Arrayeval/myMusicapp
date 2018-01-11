@@ -17,7 +17,7 @@
   import {addClass, hasClass} from 'common/js/dom'
   //自动轮播、循环轮播、设置轮播的间隔
   export default {
-    name: ' ',
+ //   name: ' ',
     data () {
       return {
         dots: [],//点

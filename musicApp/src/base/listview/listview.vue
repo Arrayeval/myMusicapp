@@ -48,7 +48,7 @@
   const ANCHOR_HEIGHT = 18;//每个字母的高度
   const TITLE_HEIGHT = 30;
   export default {
-    name: ' ',
+  //  name: ' ',
     props: {
       data: {
         type: Array,

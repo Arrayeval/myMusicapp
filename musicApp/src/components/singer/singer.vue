@@ -19,7 +19,7 @@
   const HOT_SINGER_LEN = 10;
 
   export default {
-    name: ' ',
+    //name: ' ',
     data () {
       return {
         singers: {
