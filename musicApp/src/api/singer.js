@@ -32,17 +32,13 @@ return jsonp(url,data,options)
 export function getSingerDetail(singerId){
   const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg';
   const data = Object.assign({},commonParams,{
-    singerid:singerId,
+    singermid:singerId,
     g_tk:5381,
-    uin:0,
-    format:'json',
-    inCharset:'utf-8',
-    outCharset:'utf-8',
-    notice:0,
-    platform:'h5page',
+    hostUin:0,
+    songstatus:1,
+    platform:'yqq',
     needNewCode:1,
     order:'listen',
-    from:'h5',
     num:100,
     begin:0,
   });

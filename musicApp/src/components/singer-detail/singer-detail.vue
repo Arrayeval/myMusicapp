@@ -52,6 +52,7 @@
           return
         }
         getSingerDetail(this.singer.id).then((res) => {
+
           if (res.code === ERR_OK) {
             this.songs = this._normalizeSongs(res.data.list);
           }
@@ -63,7 +64,7 @@
         list.forEach((item) => {
           let {musicData} = item;
           if (musicData.songid && musicData.albummid) {
-           // console.log(musicData)
+
             ret.push(createSong(musicData))
           }
 

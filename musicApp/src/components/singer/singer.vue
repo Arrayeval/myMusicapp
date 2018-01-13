@@ -43,7 +43,6 @@
       _getSingerList(){
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
-            // console.log(res.data.list);
             this.singers = res.data.list;
             this.singers = this._normalizeSinger(this.singers);
           //  console.log(this._normalizeSinger(this.singers));
@@ -70,7 +69,7 @@
              */
             map.hot.items.push(new Singer({
               name: item.Fother_name,
-              id: item.Fsinger_id,
+              id: item.Fsinger_mid,
               mid: item.Fsinger_mid
             }));
           }
@@ -83,7 +82,7 @@
           }
           map[key].items.push(new Singer({
             name: item.Fsinger_name,
-            id: item.Fsinger_id,
+            id: item.Fsinger_mid,
             mid: item.Fsinger_mid
           }));
 

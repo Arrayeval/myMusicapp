@@ -18,14 +18,15 @@ export default class Song {
 export  function createSong(musicData){
   return new Song({
     id:musicData.songid,
-    mid:musicData.mid,
+    mid:musicData.songmid,
     singer:filterSinger(musicData.singer),
     name: musicData.songname,
     album:musicData.albumname,
     duration:musicData.interval,
     //图片的地址：你可以进歌曲详情页进行查看，地址时进行拼接的
     image:`https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url:`http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+    url:`http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?fromtag=46`
+
   })
 }
 

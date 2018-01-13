@@ -272,8 +272,6 @@
 
       //下一首
       next(){
-          debugger
-        console.log(this.playList);
         if (!this.songReady) {//歌曲资源未加载完毕禁止点击
           return
         }
