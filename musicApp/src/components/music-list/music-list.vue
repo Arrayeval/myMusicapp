@@ -5,7 +5,7 @@
     </div>
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImage">
-      <div class="play-wrapper">
+      <div class="play-wrapper" @click="random">
         <div class="play" v-show="song.length>0" ref="playBtn">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
@@ -20,9 +20,8 @@
     <scroll @scroll="scroll" :probe-type="probeType"
             :listen-scroll="listenScroll" :data="song" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :song="song"   @select="selectItem"></song-list>
+        <song-list :song="song" @select="selectItem"></song-list>
       </div>
-
 
 
       <div class="loading-container" v-show="!song.length">
@@ -93,16 +92,24 @@
       },
 
       /*
-      * 响应song-list的派发事件
-      * */
-      selectItem(item,index){//item：当前点击的歌曲,index:歌曲索引
+       * 响应song-list的派发事件
+       * */
+      selectItem(item, index){//item：当前点击的歌曲,index:歌曲索引
         this.selectPlay({
-          list:this.song,//歌曲列表数据
-          index:index
+          list: this.song,//歌曲列表数据
+          index: index
         })
       },
+
+      random(){
+        this.randomPlay({
+          list:this.song
+        })
+      },
+
       ...mapActions([
-          'selectPlay'
+        'selectPlay',
+        'randomPlay'
       ])
     },
     watch: {
