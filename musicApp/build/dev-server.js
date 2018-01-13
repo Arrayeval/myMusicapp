@@ -22,15 +22,15 @@ const port = process.env.PORT || config.dev.port
 const autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
-const proxyTable = config.dev.proxyTable
+const proxyTable = config.dev.proxyTable;
 
-const app = express()
+const app = express();
 const compiler = webpack(webpackConfig)
 
 //利用express，发送请求
 const apiRouters = express.Router();
 apiRouters.get('/getDiscList', function (req, res) {
-  var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+  var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
   axios.get(url, {
     headers: {
       referer: 'https://c.y.qq.com/',
@@ -42,7 +42,33 @@ apiRouters.get('/getDiscList', function (req, res) {
   }).catch((e) => {
     console.log(e)
   })
-})
+});
+
+
+apiRouters.get('/lyric', function (req, res) {
+  var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+
+    var  ret=response.data;
+    if(typeof ret  === "string"){
+      let reg=/^\w+\(({[^()]+})\)$/
+      let matches =ret.match(reg);
+      if(matches){
+       ret =JSON.parse(matches[1]);
+      }
+    }
+    res.json(ret)
+  }).catch((e) => {
+    console.log(e)
+  })
+});
+
 
 app.use('/api', apiRouters)
 
@@ -50,7 +76,7 @@ app.use('/api', apiRouters)
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true
-})
+});
 
 const hotMiddleware = require('webpack-hot-middleware')(compiler, {
   log: false,
