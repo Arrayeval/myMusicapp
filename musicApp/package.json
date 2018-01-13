@@ -10,18 +10,19 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@types/js-base64": "^2.3.1",
+    "axios": "^0.16.1",
     "babel-polyfill": "^6.26.0",
+    "better-scroll": "~1.4.0",
+    "create-keyframe-animation": "^0.1.0",
     "fastclick": "^1.0.6",
+    "jsonp": "0.2.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue": "^2.5.2",
-    "vuex": "^2.3.1",
-    "jsonp":"0.2.1",
+    "vue-lazyload": "^1.0.3",
     "vue-router": "^3.0.1",
-    "better-scroll":"~1.4.0",
-    "axios":"^0.16.1",
-    "vue-lazyload":"^1.0.3",
-    "create-keyframe-animation":"^0.1.0"
+    "vuex": "^2.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

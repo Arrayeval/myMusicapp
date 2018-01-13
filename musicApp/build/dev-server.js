@@ -57,7 +57,7 @@ apiRouters.get('/lyric', function (req, res) {
 
     var  ret=response.data;
     if(typeof ret  === "string"){
-      let reg=/^\w+\(({[^()]+})\)$/
+      let reg=/^\w+\(({[^()]+})\)$/; //进行截取，获取我们想要的
       let matches =ret.match(reg);
       if(matches){
        ret =JSON.parse(matches[1]);

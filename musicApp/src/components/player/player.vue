@@ -108,6 +108,8 @@
 
   const transform = prefixStyle('transform');
 
+  import Lyric from "lyric-parser"
+
   export default {
 //    name: '',
     data () {
@@ -115,6 +117,7 @@
         songReady: false,//歌曲状态
         showErrorMessage: false,
         currentTime: 0,
+        currentLyric:null,
 
       }
     },
@@ -345,6 +348,15 @@
       //设置播放时间
       updateTime(e){
         this.currentTime = e.target.currentTime
+      },
+
+      //获得歌词
+      getLyric(){
+          this.currentSong.getLyric().then((lyric)=>{
+              console.log(lyric);
+              this.currentLyric = new  Lyric(lyric);
+              console.log(this.currentLyric);
+          });
       }
 
     },
@@ -356,7 +368,7 @@
         }
         this.$nextTick(() => {
           this.$refs.audio.play();
-          this.currentSong.getLyric();
+          this.getLyric();
         })
       },
       //监听状态（播放，暂停）
