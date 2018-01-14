@@ -28,6 +28,11 @@
                 <img src="" alt="" class="image" :src="currentSong.image">
               </div>
             </div>
+            <div class="playing-lyric-wrapper">
+              <div class="playing-lyric">
+                {{playingLyric}}
+              </div>
+            </div>
           </div>
           <!--歌词部分-->
           <scroll class="middle-r" ref="lyricList"
@@ -144,7 +149,8 @@
         currentTime: 0,
         currentLyric: null,
         currentLineNum: 0,
-        currentShow: "cd"
+        currentShow: "cd",
+        playingLyric:''
       }
     },
 
@@ -278,13 +284,18 @@
         this.setPlayList(list);
       },
 
+
       //暂停（播放）
       toggle_playing(tag){
         if (tag === false) {
           this.setPlayingState(tag);
           return
         }
-        this.setPlayingState(!this.playing)
+        this.setPlayingState(!this.playing);
+        //是否暂停歌曲的播放
+        if (this.currentLyric) {
+          this.currentLyric.togglePlay();
+        }
       },
 
       //歌曲播放完了
@@ -301,6 +312,10 @@
       loop(){
         this.$refs.audio.currentTime = 0;
         this.$refs.audio.play();
+        //每次重新播放的时候就重置歌词
+        if (this.currentLyric) {
+          this.currentLyric.seek(0);
+        }
       },
 
       //下一首
@@ -308,14 +323,19 @@
         if (!this.songReady) {//歌曲资源未加载完毕禁止点击
           return
         }
-        let index = this.currentIndex + 1;
-        if (index === this.playList.length) {
-
-          index = 0
+        //若只有一首歌曲就循环播放，保证歌曲id的变化
+        if(this.playList.length ===1){
+            this.loop();
         }
-        this.setCurrentIndex(index)//改变索引值
-        if (!this.playing) {
-          this.toggle_playing()
+        else{
+          let index = this.currentIndex + 1;
+          if (index === this.playList.length) {
+            index = 0
+          }
+          this.setCurrentIndex(index);//改变索引值
+          if (!this.playing) {
+            this.toggle_playing()
+          }
         }
         this.songReady = true;
       },
@@ -324,13 +344,20 @@
         if (!this.songReady) {//歌曲资源未加载完毕禁止点击
           return
         }
-        let index = this.currentIndex - 1
-        if (index === -1) {
-          index = this.playList.length - 1
+
+        //若只有一首歌曲就循环播放，保证歌曲id的变化
+        if(this.playList.length===1){
+            this.loop();
         }
-        this.setCurrentIndex(index)//改变状态 if(!this.playing)
-        if (!this.playing) {
-          this.toggle_playing()
+        else{
+          let index = this.currentIndex - 1
+          if (index === -1) {
+            index = this.playList.length - 1
+          }
+          this.setCurrentIndex(index)//改变状态 if(!this.playing)
+          if (!this.playing) {
+            this.toggle_playing()
+          }
         }
         this.songReady = true;
 
@@ -354,9 +381,14 @@
       },
 
       onProgressBarChange(percent){
-        this.$refs.audio.currentTime = this.currentSong.duration * percent
+        const currentTime = this.currentSong.duration * percent;
+        this.$refs.audio.currentTime = currentTime;
+
         if (!this.playing) {//播放
-          this.toggle_playing()
+          this.toggle_playing();
+        }
+        if (this.currentLyric) {
+          this.currentLyric.seek(currentTime * 1000)
         }
       },
       //找到当前的歌曲索引
@@ -389,7 +421,11 @@
             this.currentLyric.play();
           }
           //console.log(this.currentLyric);
-        });
+        }).catch(function(err){
+            this.currentLyric=null;
+            this.playingLyric='';
+            this.currentLineNum = 0;
+        })
       },
       handelLyric({lineNum, txt}){
         this.currentLineNum = lineNum;
@@ -400,6 +436,8 @@
         else {//否则顶部
           this.$refs.lyricList.scrollTo(0, 0, 1000);
         }
+        //当前歌词
+        this.playingLyric=txt;
       },
 
       //定义左划，右划
@@ -455,7 +493,8 @@
             offsetWidth = -window.innerWidth;
             opacity = 0;
           }
-        };
+        }
+        ;
         const time = 300;
         this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`;
         this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`;
@@ -470,10 +509,19 @@
         if (newSong.id === oldSong.id) {
           return
         }
-        this.$nextTick(() => {
+        //如果当前有歌曲播放（清除）
+        if (this.currentLyric) {
+          this.currentLyric.stop();
+        }
+        setTimeout(()=>{
           this.$refs.audio.play();
           this.getLyric();
-        })
+        },1000);
+
+//        this.$nextTick(() => {
+//          this.$refs.audio.play();
+//          this.getLyric();
+//        })
       },
       //监听状态（播放，暂停）
       playing(newPlaying){
