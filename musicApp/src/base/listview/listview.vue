@@ -150,7 +150,7 @@
       //组件里的方法会覆盖mixin的同名函数方法
       handelPlayList(playList){
         const bottom = playList.length>0 ? "60px":'';
-         this.$refs.listview.$el.style.bottom =bottom ;//设置底部距离
+       //  this.$refs.listview.$el.style.bottom =bottom ;//设置底部距离
          this.$refs.listview.refresh();   //重新渲染
       },
 
