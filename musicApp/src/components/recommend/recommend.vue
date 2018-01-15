@@ -1,37 +1,37 @@
 <template>
   <scroll ref="scroll" class="recommend" :mydata="songList">
-        <div>
-          <div class="recommend-content">
-            <div class="slider-wrapper" v-if="recommends.length">
-              <!--轮播图组件--->
-              <slider>
-                <div v-for="item in recommends">
-                  <a :href="item.linkUrl">
-                    <img class="needsclick"   :src="item.picUrl" alt="" @load="loadImage">
-                  </a>
-                </div>
-              </slider>
+    <div>
+      <div class="recommend-content">
+        <div class="slider-wrapper" v-if="recommends.length">
+          <!--轮播图组件--->
+          <slider>
+            <div v-for="item in recommends">
+              <a :href="item.linkUrl">
+                <img class="needsclick" :src="item.picUrl" alt="" @load="loadImage">
+              </a>
             </div>
+          </slider>
+        </div>
 
-        <div class="recommend-list"  v-if="songList.length">
+        <div class="recommend-list" v-if="songList.length">
           <h1 class="list-title">热门歌曲推荐</h1>
           <ul class="song-list">
             <li v-for="item in songList" class="list-item">
               <div class="icon">
                 <!--<img width="60" height="60" :src= "item.picUrl">-->
-                <img width="60" height="60" v-lazy= "item.picUrl">
+                <img width="60" height="60" v-lazy="item.picUrl">
               </div>
               <div class="text">
-                <h2 class="name"  >{{item.songListAuthor}}</h2>
-                <p class="desc"  >{{item.songListDesc}}</p>
+                <h2 class="name">{{item.songListAuthor}}</h2>
+                <p class="desc">{{item.songListDesc}}</p>
               </div>
             </li>
           </ul>
         </div>
       </div>
-          <div class="loading-container" v-show="!songList.length">
-            <loading></loading>
-          </div>
+      <div class="loading-container" v-show="!songList.length">
+        <loading></loading>
+      </div>
     </div>
 
   </scroll>
@@ -39,29 +39,38 @@
 
 <script type="text/ecmascript-6">
 
- import Scroll from 'base/scroll/scroll'
+  import Scroll from 'base/scroll/scroll'
 
- //轮播图组件
- import Slider from 'base/slider/slider'
+  //轮播图组件
+  import Slider from 'base/slider/slider'
 
- //loading组件
- import loading from 'base/loading/loading'
+  //loading组件
+  import loading from 'base/loading/loading'
 
- //倒入api
-   import {getRecommend, getDiscList} from '../../api/recommend'
+  //倒入api
+  import {getRecommend, getDiscList} from '../../api/recommend'
   import {ERR_OK} from '../../api/config'
+
+  import {playListMixin} from "common/js/mixin"
 
   export default {
     //name: ' ',
+    mixins: [playListMixin],
     created(){
-          this._getRecommend();
+      this._getRecommend();
       //  this._getDiscList();
     },
     methods: {
+      handelPlayList(playList){
+        const bottom = playList.length > 0 ? "60px" : '';
+        this.$refs.scroll.$el.style.bottom = bottom;//设置底部距离
+        this.$refs.scroll.refresh();   //重新渲染
+      },
+
       _getRecommend(){
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
-          //  console.log(res.data);
+            //  console.log(res.data);
             this.recommends = res.data.slider;//轮播专栏
             this.songList = res.data.songList;//热门歌单
             this.radioList = res.data.radioList;//电台
@@ -70,10 +79,10 @@
       },
 
       loadImage(){
-          if(!this.checkloaded){
-            this.$refs.scroll.refresh();
-            this.checkloaded = true;
-          }
+        if (!this.checkloaded) {
+          this.$refs.scroll.refresh();
+          this.checkloaded = true;
+        }
       },
 //      _getDiscList(){
 //          getDiscList().then((res)=>{
@@ -87,7 +96,7 @@
       return {
         recommends: [],
         radioList: [],
-        songList:[]
+        songList: []
       }
     },
     components: {
@@ -141,9 +150,6 @@
                 color $color-text
               .desc
                 color $color-text-d
-
-
-
 
     .loading-container
       position absolute

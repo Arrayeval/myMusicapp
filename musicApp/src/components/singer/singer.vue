@@ -1,6 +1,6 @@
 <template>
-  <div class="singer">
-    <list-view  @select="selectSinger" :data="singers" v-if="singers.length>0"></list-view>
+  <div class="singer" ref="singer">
+    <list-view  @select="selectSinger" :data="singers" v-if="singers.length>0" ref="List"></list-view>
 
     <router-view ></router-view>
   </div>
@@ -14,6 +14,7 @@
   import ListView from "base/listview/listview"
 
   import {mapMutations} from "vuex"
+
 
   const HOT_NAME = "热门推荐";
   const HOT_SINGER_LEN = 10;

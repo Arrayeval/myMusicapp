@@ -42,11 +42,15 @@
 
   import {mapActions} from "vuex"
 
+  import {playListMixin} from "common/js/mixin"
+
   const transform = prefixStyle('transform');
   const backdrop = prefixStyle('backdrop-filter');
 
   export default {
     //name: ' ',
+    mixins: [playListMixin],
+
     props: {
       bgImage: {
         type: String,
@@ -84,6 +88,14 @@
       // console.log(this.$refs.list)
     },
     methods: {
+      //组件里的方法会覆盖mixin的同名函数方法
+      handelPlayList(playList){
+        const bottom = playList.length>0? "60px":'';
+        this.$refs.list.$el.style.bottom =bottom ;//设置底部距离
+        this.$refs.list.refresh();   //重新渲染
+      },
+
+
       scroll(pos){
         this.scrollY = pos.y
       },
@@ -103,7 +115,7 @@
 
       random(){
         this.randomPlay({
-          list:this.song
+          list: this.song
         })
       },
 

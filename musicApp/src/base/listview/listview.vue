@@ -45,10 +45,12 @@
 
   import Loading from "base/loading/loading"
 
+  import {playListMixin} from "common/js/mixin"
   const ANCHOR_HEIGHT = 18;//每个字母的高度
   const TITLE_HEIGHT = 30;
   export default {
-  //  name: ' ',
+    //  name: ' ',
+    mixins: [playListMixin],
     props: {
       data: {
         type: Array,
@@ -63,8 +65,8 @@
     },
     created(){
       //不再data中创建属性是因为这个数据不需要观测
-      this.touch = {},
-        this.listenScroll = true
+      this.touch = {};
+      this.listenScroll = true;
     },
     data () {
       return {
@@ -137,7 +139,7 @@
       diff(newVal){
         let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
         if (this.fixedTop == fixedTop) {
-              return
+          return
         }
         this.fixedTop = fixedTop
         this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
@@ -145,6 +147,14 @@
     },
 
     methods: {
+      //组件里的方法会覆盖mixin的同名函数方法
+      handelPlayList(playList){
+        const bottom = playList.length>0 ? "60px":'';
+         this.$refs.listview.$el.style.bottom =bottom ;//设置底部距离
+         this.$refs.listview.refresh();   //重新渲染
+      },
+
+
       onShortcutTouchStart(e){
         let anchorIndex = getData(e.target, 'index');
         this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 0)
@@ -194,7 +204,7 @@
       },
 
       selectItem(item){
-          this.$emit("select",item)
+        this.$emit("select", item)
       }
     }
   }
