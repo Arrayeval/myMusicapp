@@ -12,7 +12,9 @@ const state={
   playList:[],//播放列表
   sequenceList:[],//顺序播放表
   mode:playMode.sequence,
-  currentIndex:-1//当前播放
+  currentIndex:-1,//当前播放
+
+  disc:{},//歌单对象
 };
 
 export  default  state

@@ -1,40 +1,44 @@
 <template>
-  <scroll ref="scroll" class="recommend" :mydata="songList">
-    <div>
-      <div class="recommend-content">
-        <div class="slider-wrapper" v-if="recommends.length">
-          <!--轮播图组件--->
-          <slider>
-            <div v-for="item in recommends">
-              <a :href="item.linkUrl">
-                <img class="needsclick" :src="item.picUrl" alt="" @load="loadImage">
-              </a>
-            </div>
-          </slider>
-        </div>
+  <div>
+    <scroll ref="scroll" class="recommend" :mydata="songList">
+      <div>
+        <div class="recommend-content">
+          <div class="slider-wrapper" v-if="recommends.length">
+            <!--轮播图组件--->
+            <slider>
+              <div v-for="item in recommends">
+                <a :href="item.linkUrl">
+                  <img class="needsclick" :src="item.picUrl" alt="" @load="loadImage">
+                </a>
+              </div>
+            </slider>
+          </div>
 
-        <div class="recommend-list" v-if="songList.length">
-          <h1 class="list-title">热门歌曲推荐</h1>
-          <ul class="song-list">
-            <li v-for="item in songList" class="list-item">
-              <div class="icon">
-                <!--<img width="60" height="60" :src= "item.picUrl">-->
-                <img width="60" height="60" v-lazy="item.picUrl">
-              </div>
-              <div class="text">
-                <h2 class="name">{{item.songListAuthor}}</h2>
-                <p class="desc">{{item.songListDesc}}</p>
-              </div>
-            </li>
-          </ul>
+          <div class="recommend-list" v-if="songList.length">
+            <h1 class="list-title">热门歌曲推荐</h1>
+            <ul class="song-list">
+              <li @click="selectItem(item)" v-for="item in songList" class="list-item">
+                <div class="icon">
+                  <!--<img width="60" height="60" :src= "item.picUrl">-->
+                  <img width="60" height="60" v-lazy="item.picUrl">
+                </div>
+                <div class="text">
+                  <h2 class="name">{{item.songListAuthor}}</h2>
+                  <p class="desc">{{item.songListDesc}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="loading-container" v-show="!songList.length">
+          <loading></loading>
         </div>
       </div>
-      <div class="loading-container" v-show="!songList.length">
-        <loading></loading>
-      </div>
-    </div>
 
-  </scroll>
+    </scroll>
+    <router-view></router-view>
+  </div>
+
 </template>
 
 <script type="text/ecmascript-6">
@@ -52,6 +56,8 @@
   import {ERR_OK} from '../../api/config'
 
   import {playListMixin} from "common/js/mixin"
+
+  import {mapMutations} from "vuex"
 
   export default {
     //name: ' ',
@@ -84,6 +90,19 @@
           this.checkloaded = true;
         }
       },
+
+      selectItem(item){
+          console.log(item);
+          this.$router.push({
+            path:`/recommend/${item.id}`,
+          });
+          this.setDisc(item);//vuex状态存储
+
+      },
+
+      ...mapMutations({
+        setDisc:"SET_DISC"
+      })
 //      _getDiscList(){
 //          getDiscList().then((res)=>{
 //             if(res.code === ERR_OK){
@@ -91,6 +110,7 @@
 //             }
 //          });
 //      }
+
     },
     data () {
       return {
