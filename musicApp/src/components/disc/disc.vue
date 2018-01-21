@@ -24,7 +24,6 @@
       bgImage(){
         return this.disc.picUrl;
       },
-
       ...mapGetters([
         'disc'
       ])

@@ -15,6 +15,7 @@ const state={
   currentIndex:-1,//当前播放
 
   disc:{},//歌单对象
+  topList:{},
 };
 
 export  default  state

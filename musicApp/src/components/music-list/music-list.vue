@@ -11,10 +11,7 @@
           <span class="text">随机播放全部</span>
         </div>
       </div>
-
-      <div class="filter" ref="filter">
-
-      </div>
+      <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
     <scroll @scroll="scroll" :probe-type="probeType"
@@ -22,8 +19,6 @@
       <div class="song-list-wrapper">
         <song-list :song="song" @select="selectItem"></song-list>
       </div>
-
-
       <div class="loading-container" v-show="!song.length">
         <loading></loading>
       </div>

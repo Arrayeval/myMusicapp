@@ -9,15 +9,15 @@ import Search from '../components/search/search'
 import SingerDetail from '../components/singer-detail/singer-detail'
 
 import Disc from '../components/disc/disc'
+import TopList from "../components/top-list/top-list.vue"
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
       path:'/',
       redirect:'/recommend',
-
     },
     {
       path:'/recommend',
@@ -43,7 +43,14 @@ export default new Router({
     {
       path:'/rank',
       component:Rank,
-      name:'rank'
+      name:'rank',
+      children:[{
+        path: ":id",
+        component: TopList,
+        name: 'TopList'
+      }]
+
+
     },
     {
       path:'/search',

@@ -164,7 +164,7 @@
         return this.playing ? "icon-pause" : "icon-play"
       },
       iconMode(){
-        console.log(playMode)
+      //  console.log(playMode)
         return this.mode === playMode.sequence ? "icon-sequence" : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
       },
       miniIcon(){
