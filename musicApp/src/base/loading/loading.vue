@@ -13,7 +13,7 @@
         },
         props:{
             title:{
-                type:String,
+              type:String,
               default:'正在载入.....'
             }
         }

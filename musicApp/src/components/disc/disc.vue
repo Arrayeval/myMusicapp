@@ -11,11 +11,15 @@
 
   import {mapGetters} from "vuex"
 
+  import {ERR_OK} from "../../api/config"
+  //import {getSongList} from "../../api/getSongList"
+  import {getSongList} from "../../api/recommend"
+
   export default {
     name: 'disc',
     computed: {
       title(){
-          return this.disc.songListDesc;
+        return this.disc.songListDesc;
       },
       bgImage(){
         return this.disc.picUrl;
@@ -28,8 +32,25 @@
     data()
     {
       return {}
-    }
-    ,
+    },
+
+    created(){
+      this._getSongList();
+    },
+    methods: {
+      _getSongList(){
+//        getSongList(this.disc.id).then((res)=>{
+//          console.log(res)
+//        })
+        console.log(this.disc);
+        getSongList(this.disc.id).then((res) => {
+          if (res.code === ERR_OK) {
+            console.log(res)
+          }
+
+        })
+      }
+    },
     components: {
       MusicList
     }

@@ -3,14 +3,15 @@
    inCharset:'utf-8',
    outCharset:'utf-8',
    notice:0,
-   //jsonpCallback:'jsonp',
+  // jsonpCallback:'jsonp',
    format:'jsonp',
  };
+
 
 export const options ={
  // param:'jsonCallback',
   param: 'jsonpCallback',
 //  prefix: 'playlistinfoCallback'
-}
+};
 
 export const ERR_OK =0;
