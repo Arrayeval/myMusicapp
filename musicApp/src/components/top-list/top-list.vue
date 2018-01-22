@@ -2,7 +2,7 @@
   <transition name="slide">
 
     <!--<music-list :title="title" :bg-image="bgImage"></music-list>-->
-    <music-list :title="title" :bg-image="bgImage" :song="songs"></music-list>
+    <music-list :title="title" :bg-image="bgImage" :song="songs" :rank="rank"></music-list>
   </transition>
 </template>
 
@@ -33,7 +33,8 @@
 
     data () {
       return {
-        songs: []
+        songs: [],
+        rank:true,
       }
     },
     components: {
