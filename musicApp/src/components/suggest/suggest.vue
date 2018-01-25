@@ -1,23 +1,28 @@
 <template>
-  <div class="suggest">
-    <ul class="suggest-list"  >
+  <scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest">
+    <ul class="suggest-list">
       <li class="suggest-item" v-for="item in result">
         <div class="icon">
           <i :class="getIconClass(item)"></i>
         </div>
         <div class="name">
-          <p class="text" v-html="getDisplayName(item)"> </p>
+          <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
-  </div>
+  </scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import {search} from "../../api/search"
   import {ERR_OK} from '../../api/config'
   import {filterSinger} from "common/js/song"
+  import Scroll from "base/scroll/scroll"
+  import Loading from "base/loading/loading"
+
   const TYPE_SINGER = "singer";
+  const PERPAGE = 20
   export default {
     name: 'suggest',
     props: {
@@ -28,12 +33,18 @@
       showSinger: {
         type: Boolean,
         default: true,
+      },
+
+      pullup: {
+        type: Boolean,
+        default: true,
       }
     },
     data () {
       return {
-        result:[],
-        page: 1
+        result: [],
+        page: 1,
+        hasMore: true
       }
     },
     watch: {
@@ -41,39 +52,68 @@
         this.search();
       }
     },
+    components: {
+      Scroll,
+      Loading
+    },
     methods: {
       search(){
-        search(this.query, this.page, this.showSinger).then((res) => {
+        this.page = 1;
+         this.$refs.suggest.scrollTo(0,0);
+        this.hasMore = true;
+        search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
           if (res.code === ERR_OK) {
             this.result = this._genResult(res.data);
+
+            //检查是否还有数据
+            this._checkMore(res.data);
           }
         })
+      },
+      searchMore(){
+        if (!this.hasMore) {
+          return;
+        }
+        this.page++;
+        search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
+          if (res.code === ERR_OK) {
+            this.result = this.result.concat(this._genResult(res.data));
+            this._checkMore(res.data);
+          }
+        })
+
+      },
+      _checkMore(data){
+        const song = data.song;
+        if (!song.list.length || (song.curnum + song.curpage * PERPAGE) > song.totalnum) {
+          this.hasMore = false;
+        }
       },
       _genResult(data){
         let ret = [];
         if (data.zhida && data.zhida.singerid) {
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
-        if(data.song){
-            ret=ret.concat(data.song.list);
+        if (data.song) {
+          ret = ret.concat(data.song.list);
         }
         return ret
       },
       getIconClass(item){
-          if(item.type === TYPE_SINGER){
-              return "icon-mine"
-          }
-          else{
-              return "icon-music"
-          }
+        if (item.type === TYPE_SINGER) {
+          return "icon-mine"
+        }
+        else {
+          return "icon-music"
+        }
       },
       getDisplayName(item){
-          if(item.type ===TYPE_SINGER){
-              return item.singername;
-          }
-          else{
-              return `${item.songname}=${filterSinger(item.singer)}`
-          }
+        if (item.type === TYPE_SINGER) {
+          return item.singername;
+        }
+        else {
+          return `${item.songname}=${filterSinger(item.singer)}`
+        }
       }
     }
   }
