@@ -55,7 +55,12 @@ export default new Router({
     {
       path:'/search',
       component:Search,
-      name:'search'
+      name:'search',
+      children:[{
+        path:":id",
+        component:SingerDetail,
+        name:"SingerDetail"
+      }]
     },
 
   ]

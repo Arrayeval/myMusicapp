@@ -1,7 +1,7 @@
 <template>
   <scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest">
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="item in result">
+      <li class="suggest-item" v-for="item in result" @click="selectItem(item)">
         <div class="icon">
           <i :class="getIconClass(item)"></i>
         </div>
@@ -11,6 +11,9 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+      <no-result title="抱歉，没找到相关信息"></no-result>
+    </div>
   </scroll>
 </template>
 
@@ -20,7 +23,11 @@
   import {filterSinger} from "common/js/song"
   import Scroll from "base/scroll/scroll"
   import Loading from "base/loading/loading"
-
+  import Singer from "common/js/singer"
+  import {mapMutations} from "vuex"
+  import {createSong} from "common/js/song"
+  import NoResult from "base/no-result/no-result"
+  import {mapActions} from "vuex"
   const TYPE_SINGER = "singer";
   const PERPAGE = 20
   export default {
@@ -54,12 +61,13 @@
     },
     components: {
       Scroll,
-      Loading
+      Loading,
+      NoResult
     },
     methods: {
       search(){
         this.page = 1;
-         this.$refs.suggest.scrollTo(0,0);
+        this.$refs.suggest.scrollTo(0, 0);
         this.hasMore = true;
         search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
           if (res.code === ERR_OK) {
@@ -95,11 +103,21 @@
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
         if (data.song) {
-          ret = ret.concat(data.song.list);
+          ret = ret.concat(this._normalizeSongs(data.song.list));
         }
         return ret
       },
+      _normalizeSongs(list){
+        let ret = [];
+        list.forEach((musicDate) => {
+          if (musicDate.songid && musicDate.albummid) {
+            ret.push(createSong(musicDate))
+          }
+        })
+        return ret;
+      },
       getIconClass(item){
+
         if (item.type === TYPE_SINGER) {
           return "icon-mine"
         }
@@ -112,10 +130,33 @@
           return item.singername;
         }
         else {
-          return `${item.songname}=${filterSinger(item.singer)}`
+          return `${item.name}=${item.singer}`
         }
-      }
-    }
+      },
+      selectItem(item){
+        if (item.type === TYPE_SINGER) {
+          const singer = new Singer({
+            id: item.singermid,
+            name: item.singername,
+          });
+          this.$router.push({
+            path: `/search/${singer.id}`
+          });
+          this.setSinger(singer);
+        }
+        else {
+          this.insertSong(item);
+        }
+      },
+      ...mapMutations({
+        setSinger: "SET_SINGER"
+      }),
+      ...mapActions([
+        "insertSong"
+      ])
+
+    },
+
   }
 </script>
 
