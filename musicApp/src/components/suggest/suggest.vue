@@ -1,5 +1,11 @@
 <template>
-  <scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest">
+  <scroll class="suggest"
+          :data="result"
+          :pullup="pullup"
+          :beforeScroll="beforeScroll"
+          @beforeScroll="listScroll"
+          @scrollToEnd="searchMore"
+          ref="suggest" >
     <ul class="suggest-list">
       <li class="suggest-item" v-for="item in result" @click="selectItem(item)">
         <div class="icon">
@@ -51,7 +57,8 @@
       return {
         result: [],
         page: 1,
-        hasMore: true
+        hasMore: true,
+        beforeScroll:true
       }
     },
     watch: {
@@ -117,7 +124,6 @@
         return ret;
       },
       getIconClass(item){
-
         if (item.type === TYPE_SINGER) {
           return "icon-mine"
         }
@@ -147,6 +153,9 @@
         else {
           this.insertSong(item);
         }
+      },
+      listScroll(){
+          this.$emit("listScroll");
       },
       ...mapMutations({
         setSinger: "SET_SINGER"

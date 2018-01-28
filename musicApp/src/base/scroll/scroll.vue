@@ -34,7 +34,11 @@
       },
       pullup: {
         type: Boolean,
-        default:false,
+        default: false,
+      },
+      beforeScroll: {
+        type: Boolean,
+        default: false
       }
     },
     mounted(){
@@ -61,14 +65,24 @@
           });
         }
         /*
-        * 下拉刷新
-        * */
-        if(this.pullup){
-            this.scroll.on("scrollEnd",()=>{
-                if(this.scroll.y <=(this.scroll.maxScrollY +50)){
-                    this.$emit("scrollToEnd");
-                }
-            })
+         * 下拉刷新
+         * */
+        if (this.pullup) {
+          this.scroll.on("scrollEnd", () => {
+            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit("scrollToEnd");
+            }
+          })
+        };
+
+        /**
+         * 滚动，输入框失去焦点，收起键盘
+         * (betterScroll拥有滚动监听事件)
+         * */
+        if(this.beforeScroll){
+            this.scroll.on("beforeScrollStart",()=>{
+               this.$emit("beforeScroll")
+            });
         }
       },
       enable(){
