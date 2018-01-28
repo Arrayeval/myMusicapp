@@ -7,6 +7,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {debounce} from "common/js/util"
   export default {
     name: 'search-box',
     props: {
@@ -21,9 +22,9 @@
       }
     },
     created(){
-        this.$watch("query",(newQuery)=>{
+        this.$watch("query",debounce((newQuery)=>{
             this.$emit("query",newQuery)
-        })
+        },200))
     },
     methods:{
       clear(){
