@@ -103,7 +103,7 @@
           </progress-circle>
         </div>
 
-        <div class="control">
+        <div class="control" @click="showPlayList">
           <i class="icon-playlist"></i>
         </div>
       </div>
@@ -115,7 +115,7 @@
     </transition>
 
     <!---PlayList组件-->
-    <play-list></play-list>
+    <play-list ref="playlist"></play-list>
     <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"
            @ended="end"></audio>
   </div>
@@ -505,6 +505,10 @@
         this.$refs.middleL.style.opacity = opacity;
         this.$refs.middleL.style[transitionDuration] = `${time}ms`;
       },
+
+      showPlayList(){
+          this.$refs.playlist.show();
+      }
     },
     watch: {
       currentSong(newSong, oldSong){
