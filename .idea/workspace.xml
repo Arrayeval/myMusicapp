@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="381f38d8-7c25-48ab-aa3a-6060a4b13632" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/musicApp/src/components/playlist/playlist.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicApp/src/components/player/player.vue" afterPath="$PROJECT_DIR$/musicApp/src/components/player/player.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicApp/src/components/playlist/playlist.vue" afterPath="$PROJECT_DIR$/musicApp/src/components/playlist/playlist.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -55,9 +55,51 @@
       <file leaf-file-name="playlist.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/musicApp/src/components/playlist/playlist.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="14" column="29" lean-forward="true" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+            <state relative-caret-position="210">
+              <caret line="34" column="32" lean-forward="true" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="player.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/musicApp/src/components/player/player.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="549" column="0" lean-forward="true" selection-start-line="549" selection-start-column="0" selection-end-line="549" selection-end-column="0" />
+              <folding>
+                <element signature="e#4369#4414#0" expanded="true" />
+                <element signature="e#5022#5247#0" expanded="false" />
+                <element signature="e#5262#5312#0" expanded="false" />
+                <element signature="e#5328#6136#0" expanded="false" />
+                <element signature="e#6165#6246#0" expanded="false" />
+                <element signature="e#6260#6340#0" expanded="false" />
+                <element signature="e#6364#6581#0" expanded="false" />
+                <element signature="e#6621#7250#0" expanded="false" />
+                <element signature="e#7270#7378#0" expanded="false" />
+                <element signature="e#7401#7687#0" expanded="false" />
+                <element signature="e#7707#7819#0" expanded="false" />
+                <element signature="e#7865#8293#0" expanded="false" />
+                <element signature="e#8327#8678#0" expanded="false" />
+                <element signature="e#8721#8973#0" expanded="false" />
+                <element signature="e#9002#9135#0" expanded="false" />
+                <element signature="e#9167#9356#0" expanded="false" />
+                <element signature="e#9383#9877#0" expanded="false" />
+                <element signature="e#9903#10418#0" expanded="false" />
+                <element signature="e#10450#10528#0" expanded="false" />
+                <element signature="e#10543#10717#0" expanded="false" />
+                <element signature="e#10741#10909#0" expanded="false" />
+                <element signature="e#10946#11245#0" expanded="false" />
+                <element signature="e#11300#11455#0" expanded="false" />
+                <element signature="e#11480#11629#0" expanded="false" />
+                <element signature="e#11665#11722#0" expanded="false" />
+                <element signature="e#11754#12193#0" expanded="false" />
+                <element signature="e#12228#12576#0" expanded="false" />
+                <element signature="e#12620#12803#0" expanded="false" />
+                <element signature="e#12829#13720#0" expanded="false" />
+                <element signature="e#13745#14723#0" expanded="false" />
+                <element signature="e#14743#15378#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -134,16 +176,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1290">
               <caret line="45" column="26" lean-forward="true" selection-start-line="45" selection-start-column="26" selection-end-line="45" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/musicApp/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1980">
-              <caret line="66" column="23" lean-forward="false" selection-start-line="66" selection-start-column="23" selection-end-line="66" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -239,6 +271,7 @@
         <option value="$PROJECT_DIR$/musicApp/src/components/search/search.vue" />
         <option value="$PROJECT_DIR$/musicApp/src/components/suggest/suggest.vue" />
         <option value="$PROJECT_DIR$/musicApp/src/components/playlist/playlist.vue" />
+        <option value="$PROJECT_DIR$/musicApp/src/components/player/player.vue" />
       </list>
     </option>
   </component>
@@ -258,10 +291,10 @@
     <handled-path value="$PROJECT_DIR$/musicApp/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="755" />
-    <option name="y" value="188" />
-    <option name="width" value="1924" />
-    <option name="height" value="824" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -366,6 +399,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myMusicapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myMusicapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="musicApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="player" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -578,18 +637,18 @@
       <workItem from="1517143881981" duration="45000" />
       <workItem from="1517233154729" duration="4315000" />
       <workItem from="1517582509787" duration="3667000" />
-      <workItem from="1517622815400" duration="9520000" />
+      <workItem from="1517622815400" duration="10178000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="116142000" />
+    <option name="totallyTimeSpent" value="116800000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="755" y="188" width="1924" height="824" extended-state="0" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26705143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26510417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -664,13 +723,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/musicApp/build/dev-client.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/musicApp/build/utils.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1062,10 +1114,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/musicApp/src/components/player/player.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="549" column="0" lean-forward="true" selection-start-line="549" selection-start-column="0" selection-end-line="549" selection-end-column="0" />
+          <folding>
+            <element signature="e#4369#4414#0" expanded="true" />
+            <element signature="e#5022#5247#0" expanded="false" />
+            <element signature="e#5262#5312#0" expanded="false" />
+            <element signature="e#5328#6136#0" expanded="false" />
+            <element signature="e#6165#6246#0" expanded="false" />
+            <element signature="e#6260#6340#0" expanded="false" />
+            <element signature="e#6364#6581#0" expanded="false" />
+            <element signature="e#6621#7250#0" expanded="false" />
+            <element signature="e#7270#7378#0" expanded="false" />
+            <element signature="e#7401#7687#0" expanded="false" />
+            <element signature="e#7707#7819#0" expanded="false" />
+            <element signature="e#7865#8293#0" expanded="false" />
+            <element signature="e#8327#8678#0" expanded="false" />
+            <element signature="e#8721#8973#0" expanded="false" />
+            <element signature="e#9002#9135#0" expanded="false" />
+            <element signature="e#9167#9356#0" expanded="false" />
+            <element signature="e#9383#9877#0" expanded="false" />
+            <element signature="e#9903#10418#0" expanded="false" />
+            <element signature="e#10450#10528#0" expanded="false" />
+            <element signature="e#10543#10717#0" expanded="false" />
+            <element signature="e#10741#10909#0" expanded="false" />
+            <element signature="e#10946#11245#0" expanded="false" />
+            <element signature="e#11300#11455#0" expanded="false" />
+            <element signature="e#11480#11629#0" expanded="false" />
+            <element signature="e#11665#11722#0" expanded="false" />
+            <element signature="e#11754#12193#0" expanded="false" />
+            <element signature="e#12228#12576#0" expanded="false" />
+            <element signature="e#12620#12803#0" expanded="false" />
+            <element signature="e#12829#13720#0" expanded="false" />
+            <element signature="e#13745#14723#0" expanded="false" />
+            <element signature="e#14743#15378#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/musicApp/src/components/playlist/playlist.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="14" column="29" lean-forward="true" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+        <state relative-caret-position="210">
+          <caret line="34" column="32" lean-forward="true" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
           <folding />
         </state>
       </provider>
