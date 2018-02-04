@@ -103,7 +103,7 @@
           </progress-circle>
         </div>
 
-        <div class="control" @click="showPlayList">
+        <div class="control" @click.stop="showPlayList">
           <i class="icon-playlist"></i>
         </div>
       </div>
@@ -155,7 +155,7 @@
         currentLyric: null,
         currentLineNum: 0,
         currentShow: "cd",
-        playingLyric:''
+        playingLyric: ''
       }
     },
     created(){
@@ -168,7 +168,7 @@
         return this.playing ? "icon-pause" : "icon-play"
       },
       iconMode(){
-      //  console.log(playMode)
+        //  console.log(playMode)
         return this.mode === playMode.sequence ? "icon-sequence" : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
       },
       miniIcon(){
@@ -328,10 +328,10 @@
           return
         }
         //若只有一首歌曲就循环播放，保证歌曲id的变化
-        if(this.playList.length ===1){
-            this.loop();
+        if (this.playList.length === 1) {
+          this.loop();
         }
-        else{
+        else {
           let index = this.currentIndex + 1;
           if (index === this.playList.length) {
             index = 0
@@ -350,10 +350,10 @@
         }
 
         //若只有一首歌曲就循环播放，保证歌曲id的变化
-        if(this.playList.length===1){
-            this.loop();
+        if (this.playList.length === 1) {
+          this.loop();
         }
-        else{
+        else {
           let index = this.currentIndex - 1
           if (index === -1) {
             index = this.playList.length - 1
@@ -425,10 +425,10 @@
             this.currentLyric.play();
           }
           //console.log(this.currentLyric);
-        }).catch(function(err){
-            this.currentLyric=null;
-            this.playingLyric='';
-            this.currentLineNum = 0;
+        }).catch(function (err) {
+          this.currentLyric = null;
+          this.playingLyric = '';
+          this.currentLineNum = 0;
         })
       },
       handelLyric({lineNum, txt}){
@@ -441,7 +441,7 @@
           this.$refs.lyricList.scrollTo(0, 0, 1000);
         }
         //当前歌词
-        this.playingLyric=txt;
+        this.playingLyric = txt;
       },
 
       //定义左划，右划
@@ -507,11 +507,14 @@
       },
 
       showPlayList(){
-          this.$refs.playlist.show();
+        this.$refs.playlist.show();
       }
     },
     watch: {
       currentSong(newSong, oldSong){
+        if (!newSong.id) {
+          return;
+        }
         if (newSong.id === oldSong.id) {
           return
         }
@@ -519,10 +522,10 @@
         if (this.currentLyric) {
           this.currentLyric.stop();
         }
-        setTimeout(()=>{
+        setTimeout(() => {
           this.$refs.audio.play();
           this.getLyric();
-        },1000);
+        }, 1000);
 
 //        this.$nextTick(() => {
 //          this.$refs.audio.play();
