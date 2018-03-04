@@ -4,15 +4,16 @@
       <div class="list-wrapper" @click.stop>
         <div class="list-header">
           <h1 class="title">
-            <i class="icon"></i>
-            <span class="text"></span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <i class="icon" :class="iconMode" @click="changeMode"></i>
+            <span class="text">{{modeText}}</span>
+            <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
 
         <scroll ref="listContent" :data="sequenceList" class="list-content">
-          <ul>
-            <li ref="listItem" class="item" v-for="(item,index) in sequenceList" @click="selectItem(item,index)">
+          <transition-group name="list" tag="ul">
+            <li :key="item.id" ref="listItem" class="item" v-for="(item,index) in sequenceList"
+                @click="selectItem(item,index)">
               <i class="current" :class="getCurrentItem(item)"> </i>
               <span class="text">{{item.name}}</span>
               <span class="like">
@@ -22,11 +23,11 @@
                 <i class="icon-delete"></i>
               </span>
             </li>
-          </ul>
+          </transition-group>
         </scroll>
 
         <div class="list-operate">
-          <div class="add">
+          <div class="add" @click="addSong">
             <i class="icon-add"></i>
             <span class="text">添加歌曲队列</span>
           </div>
@@ -36,16 +37,26 @@
           <span>关闭</span>
         </div>
       </div>
+      <confirm ref="confirm" @confirm="confirmClear" title="是否清空播放列表" cancelBtnMsg="取消" sureBtnMsg="清空"></confirm>
+
+      <add-song ref="addSong">
+
+      </add-song>
     </div>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations, mapActions} from "vuex"
+  import {mapActions} from "vuex"
   import playMode from "common/js/config"
 
   import Scroll from "base/scroll/scroll"
+  import Confirm from "base/confirm/confirm"
+  import {playerMixin} from "common/js/mixin"
+  import AddSong from "components/add-song/add-song"
+
   export default {
+    mixins: [playerMixin],
     name: 'playlist',
     data () {
       return {
@@ -87,16 +98,27 @@
       },
       deleteOne(item){
         this.deleteSong(item);
-        if(!this.playlist.length){
-            this.hide();
+        if (!this.playList.length) {
+          this.hide();
         }
       },
-      ...mapMutations({
-        setCurrentIndex: "SET_CURRENT_INDEX",
-        setPlayingState: "SET_PLAYING_STATE"
-      }),
+      showConfirm(){
+        this.$refs.confirm.show();
+      },
+      confirmClear(){
+        this.deleteSongList();
+        this.hide();
+      },
+      addSong(){
+        this.$refs.addSong.show();
+      },
+//      ...mapMutations({
+//        setCurrentIndex: "SET_CURRENT_INDEX",
+//        setPlayingState: "SET_PLAYING_STATE"
+//      }),
       ...mapActions([
-        'deleteSong'
+        'deleteSong',
+        'deleteSongList'
       ])
     },
     watch: {
@@ -108,15 +130,20 @@
       }
     },
     computed: {
-      ...mapGetters([
-        'sequenceList',
-        'currentSong',
-        'playlist',
-        'mode'
-      ])
+      modeText(){
+        return this.mode === playMode.sequence ? "顺序播放" : this.mode === playMode.random ? "随机播放" :"单曲循环"
+      }
+//      ...mapGetters([
+//        'sequenceList',
+//        'currentSong',
+//        'playList',
+//        'mode'
+//      ])
     },
     components: {
-      Scroll
+      Scroll,
+      Confirm,
+      AddSong
     }
   }
 </script>

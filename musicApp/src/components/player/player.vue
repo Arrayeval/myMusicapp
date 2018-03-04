@@ -142,11 +142,14 @@
 
   import PlayList  from "components/playlist/playlist"
 
+  import {playerMixin} from "common/js/mixin"
+
   const transform = prefixStyle('transform');
   const transitionDuration = prefixStyle('transitionDuration');
 
   export default {
 //    name: '',
+    mixins:[playerMixin],
     data () {
       return {
         songReady: false,//歌曲状态
@@ -167,10 +170,10 @@
       playIcon(){
         return this.playing ? "icon-pause" : "icon-play"
       },
-      iconMode(){
-        //  console.log(playMode)
-        return this.mode === playMode.sequence ? "icon-sequence" : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-      },
+//      iconMode(){
+//        //  console.log(playMode)
+//        return this.mode === playMode.sequence ? "icon-sequence" : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+//      },
       miniIcon(){
         return this.playing ? "icon-pause-mini" : "icon-play-mini"
       },
@@ -180,12 +183,17 @@
 
       ...mapGetters([
         'fullScreen',
-        'playList',
-        'currentSong',
+       // 'playList',
+      //  'currentSong',
         'playing',
         'currentIndex',
-        'mode',
-        'sequenceList',
+       // 'mode',
+       // 'sequenceList',
+
+
+
+
+
 
       ]),
 
@@ -208,10 +216,7 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
-        setPlayingState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayMode: 'SET_PLAY_MODE',
-        setPlayList: 'SET_PLAYLIST'
+
       }),
 
       /*创建动画*/

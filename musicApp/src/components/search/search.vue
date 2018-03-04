@@ -50,12 +50,12 @@
   import SearchList from "base/search-list/search-list"
   import Confirm from "base/confirm/confirm"
   import Scroll from "base/scroll/scroll"
-  import {playListMixin} from "common/js/mixin"
+  import {playListMixin,searchMixin} from "common/js/mixin"
   import {mapActions} from "vuex"
-  import {mapGetters} from "vuex"
+ // import {mapGetters} from "vuex"
   export default {
     // name: ' ',
-    mixins:[playListMixin],
+    mixins:[playListMixin,searchMixin],
     data () {
       return {
         hotkey: [],
@@ -66,9 +66,9 @@
       shortcut(){
         return this.hotkey.concat(this.searchHistory);
       },
-      ...mapGetters([
-        "searchHistory"
-      ])
+//      ...mapGetters([
+//        "searchHistory"
+//      ])
     },
     created(){
       this._getHotKey()
@@ -81,18 +81,18 @@
           }
         })
       },
-      addQuery(query){
-        this.$refs.searchBox.setQuery(query);
-      },
-      onQueryChange(query){
-        this.query = query
-      },
+//      addQuery(query){
+//        this.$refs.searchBox.setQuery(query);
+//      },
+//      onQueryChange(query){
+//        this.query = query
+//      },
       blurInput(){
         this.$refs.searchBox.blur()
       },
-      saveSearch(){
-        this.saveSearchHistory(this.query)
-      },
+//      saveSearch(){
+//        this.saveSearchHistory(this.query)
+//      },
       deleteOne(item){
         this.deleteSearchHistory(item);
       },
@@ -112,8 +112,8 @@
 
       },
       ...mapActions([
-        'saveSearchHistory',
-        "deleteSearchHistory",
+        //'saveSearchHistory',
+     //   "deleteSearchHistory",
         "clearSearchHistory"
       ])
 
