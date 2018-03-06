@@ -122,7 +122,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations,mapActions} from 'vuex'
 
   import animations from "create-keyframe-animation"
 
@@ -190,11 +190,6 @@
        // 'mode',
        // 'sequenceList',
 
-
-
-
-
-
       ]),
 
       disabledCls(){
@@ -216,8 +211,8 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
-
       }),
+      ...mapActions(['savePlayHistory']),
 
       /*创建动画*/
       enter(el, done){
@@ -374,7 +369,8 @@
       //表明资源加载完毕
       ready(){
         this.songReady = true;
-        this.showErrorMessage = false
+        this.showErrorMessage = false;
+        this.savePlayHistory(this.currentSong);
       },
       error(){//当歌曲加载失败
         this.songReady = true;//可以点击，

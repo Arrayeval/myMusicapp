@@ -102,6 +102,7 @@ export const searchMixin ={
       "searchHistory"
     ]),
   },
+
   methods:{
     onQueryChange(query){
       this.query = query

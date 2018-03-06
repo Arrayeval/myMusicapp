@@ -9,12 +9,28 @@
       </div>
 
       <div class="search-box-wrapper">
-        <search-box @query="onQueryChange" placeholder="搜索歌曲"></search-box>
+        <search-box ref="searchBox" @query="onQueryChange" placeholder="搜索歌曲"></search-box>
       </div>
-      <div class="shortcut" v-show="!query"></div>
-      <switch-item :currentIndex="currentIndex" :switches="switches" @switchItem="switchItem"></switch-item>
+      <div class="shortcut" v-show="!query">
+        <switch-item :currentIndex="currentIndex" :switches="switches" @switchItem="switchItem"></switch-item>
+        <div class="list-wrapper">
+          <scroll ref="songList" class="list-scroll" v-show="currentIndex===0" :data="playHistory">
+            <div class="list-inner">
+              <song-list :songs="playHistory" @select="selectSong"></song-list>
+            </div>
+          </scroll>
+
+          <scroll ref="searchList" class="list-scroll"  v-show="currentIndex ===1" :data="searchHistory">
+            <div class="list-inner">
+              <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
+            </div>
+          </scroll>
+
+        </div>
+      </div>
+
       <div class="search-result" v-show="query">
-        <suggest :query="query" :showSinger="showSinger" @select="selectSuggest" @listScroll="blurInput"> </suggest>
+        <suggest :query="query" :showSinger="showSinger" @select="selectSuggest" @listScroll="blurInput"></suggest>
       </div>
     </div>
   </transition>
@@ -22,27 +38,46 @@
 
 <script type="text/ecmascript-6">
   import SearchBox from "base/search-box/search-box"
-  import Suggest from "components/suggest/suggest"
+  import suggest from "components/suggest/suggest"
   import {searchMixin} from "common/js/mixin"
   import switchItem from "base/switches/switches"
+  import Scroll from "base/scroll/scroll"
+  import SongList from "base/song-list/song-list"
+  import Song from "common/js/song"
+
+  import SearchList from "base/search-list/search-list"
+  import {mapGetters,mapActions} from 'vuex'
   export default {
-    mixins:[searchMixin],
+    mixins: [searchMixin],
     name: 'add-song',
+    computed:{
+      ...mapGetters([
+          'playHistory'
+      ]),
+    },
     data () {
       return {
         showFlag: false,
-        query:'',
-        showSinger:false,
-        currentIndex:0,
-        switches:[
-          {name:"最近播放"},
-          {name:"搜索历史"}
+        query: '',
+        showSinger: false,
+        currentIndex: 0,
+        switches: [
+          {name: "最近播放"},
+          {name: "搜索历史"}
         ]
       }
     },
     methods: {
       show(){
         this.showFlag = true;
+        setTimeout(()=>{
+            if(this.currentIndex===0){
+              this.$refs.songList.refresh();
+            }
+            else{
+              this.$refs.searchList.refresh();
+            }
+        },20);
       },
       hide(){
         this.showFlag = false;
@@ -51,14 +86,19 @@
         this.saveSearch()
       },
       switchItem(index){
-          this.currentIndex =index;
-      }
+        this.currentIndex = index;
+      },
+      selectSong(song,index){
+          if(index!==0){
+              this.inertSong(new Song(song));
+          }
+      },
+      ...mapActions([
+          'inertSong'
+      ])
     },
-    components:{
-      SearchBox,
-      Suggest,
-      switchItem
-
+    components: {
+      SearchBox,suggest,switchItem,Scroll,SongList,SearchList
     }
   }
 </script>

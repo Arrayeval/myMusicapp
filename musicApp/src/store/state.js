@@ -2,7 +2,7 @@
  * Created by Administrator on 2017/12/4 0004.
  */
 import playMode from "common/js/config"
-import {loadSearch} from "common/js/cache"
+import {loadSearch,loadPlay} from "common/js/cache"
 
 const state={
   singer:{},
@@ -16,7 +16,8 @@ const state={
 
   disc:{},//歌单对象
   topList:{},
-  searchHistory:loadSearch()
+  searchHistory:loadSearch(),
+  playHistory:loadPlay()
 };
 
 export  default  state

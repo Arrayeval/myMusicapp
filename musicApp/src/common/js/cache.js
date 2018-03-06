@@ -5,6 +5,9 @@ import  storage from "good-storage"
 const SEARCH_KEY ="__search__";
 const SEARCH_MAX_LENGTH =15
 
+const PLAY_KEY = "__play__";
+const PLAT_MAX_LENGTH =2000
+
 function insertArray(arr,val,compare,maxLen){
   const index=arr.findIndex(compare);
   if(index ===0){//如果带插入数据在第一条，不需要做任何操作
@@ -52,4 +55,20 @@ export function deleteSearch(query){
 export function clearSearch(){
   storage.remove(SEARCH_KEY);
   return [];
+}
+
+export function savePlay(song){
+  let songs =storage.get(PLAY_KEY,[]);
+  insertArray(songs,song,(item)=>{
+    return item.id === song.id;
+  },PLAY_MAX_LENGTH);
+  storage.set(PLAY_KEY,songs);
+  return songs;
+}
+
+
+
+export function loadPlay(){
+  console.log(storage.get(PLAY_KEY));
+  return storage.get(PLAY_KEY,[]);
 }
