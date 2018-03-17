@@ -14,6 +14,12 @@ import fastclick from 'fastclick'
 
 import  VueLazyLoad from 'vue-lazyload'
 
+/* eslint-disable no-unused-vars */
+import VConsole from "vconsole"
+var vConsole = new VConsole();
+console.log('Hello world');
+
+
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function () {
     fastclick.attach(document.body);
